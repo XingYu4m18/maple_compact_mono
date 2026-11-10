@@ -1,0 +1,10 @@
+* text=auto
+*.py text eol=lf
+*.md text eol=lf
+*.json text eol=lf
+*.toml text eol=lf
+*.ttf binary
+*.png binary
+# Preserve third-party license files byte-for-byte, including original line endings.
+licenses/** -text -whitespace
+OFL.txt -text -whitespace
