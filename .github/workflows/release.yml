@@ -2,7 +2,7 @@ name: Build and publish fonts
 
 on:
   push:
-    tags: ['v[0-9]*']
+    tags: ['v[0-9]*', 'resume/v[0-9]*']
   workflow_dispatch:
     inputs:
       upstream_version:
@@ -15,6 +15,11 @@ on:
         required: false
         default: ''
         type: string
+      resume_draft:
+        description: 'Reuse a complete draft only when font-generation inputs match its tag'
+        required: false
+        default: false
+        type: boolean
 
 permissions:
   contents: write
@@ -30,6 +35,7 @@ jobs:
       matrix: ${{ steps.catalog.outputs.matrix }}
       tag: ${{ steps.catalog.outputs.tag }}
       upstream_tag: ${{ steps.catalog.outputs.upstream_tag }}
+      resume: ${{ steps.catalog.outputs.resume }}
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-python@v7
@@ -42,14 +48,19 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           INPUT_VERSION: ${{ inputs.upstream_version }}
           INPUT_TAG: ${{ inputs.release_tag }}
+          INPUT_RESUME: ${{ inputs.resume_draft }}
         run: |
+          RESUME=false
           if [ "$GITHUB_EVENT_NAME" = push ]; then
-            VERSION="${GITHUB_REF_NAME%-compact.*}"
-            RELEASE_TAG="$GITHUB_REF_NAME"
+            RELEASE_TAG="${GITHUB_REF_NAME#resume/}"
+            VERSION="${RELEASE_TAG%-compact.*}"
+            if [[ "$GITHUB_REF_NAME" == resume/* ]]; then RESUME=true; fi
           else
             VERSION="$INPUT_VERSION"
             RELEASE_TAG="$INPUT_TAG"
+            RESUME="${INPUT_RESUME:-false}"
           fi
+          echo "resume=$RESUME" >> "$GITHUB_OUTPUT"
           EXTRA_ARGS=()
           if [ -n "$RELEASE_TAG" ]; then EXTRA_ARGS+=(--release-tag "$RELEASE_TAG"); fi
           python tools/build_compact.py --upstream-version "$VERSION" "${EXTRA_ARGS[@]}" --catalog-only --output-dir dist
@@ -63,20 +74,43 @@ jobs:
               f.write('upstream_tag=' + catalog['tag'] + '\n')
               f.write('matrix=' + json.dumps(matrix) + '\n')
           PY
+      - name: Verify completed draft and identical font-generation inputs
+        if: steps.catalog.outputs.resume == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ steps.catalog.outputs.tag }}
+        run: |
+          git fetch origin tag "$TAG"
+          git diff --exit-code "$TAG" HEAD -- tools/compact_font.py tools/build_compact.py requirements.txt upstream.release.json OFL.txt THIRD_PARTY_NOTICES.md licenses/
+          gh release view "$TAG" --json isDraft,assets > dist/existing-draft.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          catalog = json.loads(Path('dist/catalog.json').read_text())
+          release = json.loads(Path('dist/existing-draft.json').read_text())
+          assert release['isDraft'], 'Never resume or replace a published release'
+          actual = {a['name'] for a in release['assets'] if a['size'] > 0}
+          expected = {name for p in catalog['packages'] for name in (p['output'], p['output'][:-4] + '.sha256')}
+          assert actual == expected, 'Draft is incomplete; use the full build workflow'
+          print('Verified existing draft:', len(actual), 'assets; font-generation inputs unchanged')
+          PY
       - name: Create draft release
         env:
           GH_TOKEN: ${{ github.token }}
           TAG: ${{ steps.catalog.outputs.tag }}
+          RESUME: ${{ steps.catalog.outputs.resume }}
         run: |
           if gh release view "$TAG" --json isDraft > dist/release.json 2>/dev/null; then
             python -c "import json; assert json.load(open('dist/release.json'))['isDraft'], 'Release already published; do not overwrite it'"
             gh release edit "$TAG" --notes-file dist/release-notes.md
           else
+            if [ "$RESUME" = true ]; then echo '::error::Draft must already exist when resuming'; exit 1; fi
             gh release create "$TAG" --target "$GITHUB_SHA" --title "Maple Compact Mono $TAG" --notes-file dist/release-notes.md --draft
           fi
 
   build:
     needs: prepare
+    if: needs.prepare.outputs.resume != 'true'
     runs-on: ubuntu-24.04
     timeout-minutes: 120
     strategy:
@@ -108,12 +142,14 @@ jobs:
 
   windows:
     needs: [prepare, build]
+    if: always() && needs.prepare.result == 'success' && (needs.build.result == 'success' || (needs.prepare.outputs.resume == 'true' && needs.build.result == 'skipped'))
     uses: ./.github/workflows/windows-font-check.yml
     with:
       release_tag: ${{ needs.prepare.outputs.tag }}
 
   publish:
     needs: [prepare, build, windows]
+    if: always() && needs.prepare.result == 'success' && needs.windows.result == 'success' && (needs.build.result == 'success' || (needs.prepare.outputs.resume == 'true' && needs.build.result == 'skipped'))
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v7

@@ -16,7 +16,8 @@ on:
         default: ''
 
 permissions:
-  contents: read
+  # Draft release assets are private even in a public repository.
+  contents: write
 
 jobs:
   directwrite-and-chromium:
@@ -45,9 +46,13 @@ jobs:
         if: inputs.release_tag != ''
         env:
           GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
           RELEASE_TAG: ${{ inputs.release_tag }}
         run: |
-          gh release download "$env:RELEASE_TAG" --dir dist/candidate --pattern MapleCompactMono-NF-CN.zip --pattern MapleCompactMono-NF-CN.sha256
+          $result = gh release download "$env:RELEASE_TAG" --dir dist/candidate --pattern MapleCompactMono-NF-CN.zip --pattern MapleCompactMono-NF-CN.sha256 2>&1
+          $code = $LASTEXITCODE
+          Write-Output $result
+          if ($code -ne 0) { Write-Output "::error title=Draft download failed::$result"; exit $code }
           python tools/check_windows_compatibility.py --package dist/candidate/MapleCompactMono-NF-CN.zip --native windows_font_check.exe --install-ci-fonts
       - name: Install Chromium test dependencies
         run: |

@@ -141,6 +141,12 @@ v7.9 上游有四个预设：`MapleMono`、`MapleMonoNL`、`MapleMonoNormal`、`
 
 已完成的 Windows 对照见 [2026-11-10 检查记录](https://github.com/XingYu4m18/maple_compact_mono/actions/runs/42800795652)：原版为 `Maple Mono NF CN`，仅改为 Dense 的对照保留完整新名称，仅补 name 16/17 仍去掉 Compact，仅补 WWS 即保留完整 Compact 名称。修正版全部 16 个字重／斜体通过系统 DirectWrite 文件选择检查，以及 Chromium 家族名、local 完整名称、直接加载字体三种路径的像素对照，并排除默认字体回退。这些测试不能由 Ubuntu 验证替代；每次正式发布仍须对实际 ZIP 重做 Windows 检查。
 
+发布注意：草稿 Release 的附件在公开仓库中也不是公开资源，Windows 候选检查使用仓库 `GITHUB_TOKEN` 的 `contents: write` 授权下载，并显式设置 `GH_REPO`。PowerShell 调用 gh 后必须立即检查退出码，不能在下载失败后继续 Python，否则只会得到误导性的“校验文件不存在”。
+
+若全部包已成功上传，但后续授权或 Windows 检查失败，可在主分支手动运行发布工作流并勾选 `resume_draft`，同时指定上游版本与原草稿标签；也可推送指向修复提交的临时 `resume/v版本号-compact.N` 标签触发。恢复前工作流会核对全部 ZIP/校验附件齐全，且字体生成代码、依赖、上游清单及许可证与原发布标签完全相同；只有工作流或文档等不改变产物的修复才可复用。否则必须全量重新构建。恢复仍须通过实际包的 Windows 检查，不会绕过门禁或覆盖已公开版本，临时触发标签完成后可清理。
+
+Windows 检查目前以 v7.9 的 16 个静态字体为基线。未来上游新增字重或样式时，要同步核对 WWS 适配、包内数量和浏览器检查覆盖范围，不能只修改断言数量或跳过新样式。
+
 未来更新上游时，还应检查许可证和组件来源是否变化，按需要更新固定清单、README 中基线版本/下载表、第三方说明和截图。现有 `THIRD_PARTY_NOTICES.md` 与 `licenses/` 是 v7.9 基线，不能默认永远适用于新版。脚本适配新版本不代表第三方许可已经自动更新。
 
 ## 缓存、产物和清理
