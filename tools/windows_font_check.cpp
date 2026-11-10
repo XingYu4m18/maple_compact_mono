@@ -123,7 +123,9 @@ int wmain(int argc, wchar_t** argv) {
             ComPtr<IDWriteFontFile> selected_file;
             check(selected_face->GetFiles(&count, selected_file.GetAddressOf()));
             const auto selected_path = file_path(selected_file.Get());
-            ensure(count == 1 && (system ? selected_path.filename() == paths[i].filename() : fs::equivalent(selected_path, paths[i])),
+            std::wcout << L"SELECT " << selected_path.wstring() << L" expected=" << paths[i].filename().wstring() << L"\n";
+            ensure(count == 1 && (system ? _wcsicmp(selected_path.filename().c_str(), paths[i].filename().c_str()) == 0
+                                        : fs::equivalent(selected_path, paths[i])),
                    "Wrong font file selected");
             glyph_width(selected_face.Get(), 'A', 500);
             glyph_width(selected_face.Get(), 0x4E2D, 1000);

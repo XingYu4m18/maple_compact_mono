@@ -17,7 +17,7 @@ import urllib.request
 import zipfile
 
 from fontTools.ttLib import TTFont
-from compact_font import declare_wws_family, require
+from compact_font import declare_wws_family, normalize_simple_overlaps, require
 
 FAMILY = 'Maple Compact Mono NF CN'
 PACKAGE = 'MapleCompactMono-NF-CN.zip'
@@ -56,7 +56,8 @@ def prepare(root):
                                'style': 'italic' if os2.fsSelection & 1 else 'normal'})
             for mode in modes[1:]:
                 with TTFont(source, recalcTimestamp=False) as font:
-                    before = {t: font.getTableData(t) for t in font.keys() if t not in ('GlyphOrder', 'head', 'name', 'OS/2')}
+                    allowed = ('GlyphOrder', 'head', 'name', 'OS/2') + (('glyf', 'loca', 'maxp') if mode == 'fixed' else ())
+                    before = {t: font.getTableData(t) for t in font.keys() if t not in allowed}
                     names = font['name']
                     if mode == 'dense':
                         for n in names.names:
@@ -69,6 +70,8 @@ def prepare(root):
                         names.setName(style, 17, 3, 1, 0x409)
                     if mode in ('wws_only', 'fixed'):
                         declare_wws_family(font)
+                    if mode == 'fixed':
+                        normalize_simple_overlaps(font)
                     target = root / mode / source.name
                     font.save(target)
                 with TTFont(target) as font:

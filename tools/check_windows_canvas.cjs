@@ -8,6 +8,7 @@ const assert = require('assert');
   const browser = await chromium.launch({headless: true});
   try {
     const page = await browser.newPage();
+    page.on('console', msg => console.log(`::notice title=Chromium console::${msg.text().replace(/\n/g, ' ')}`));
     const results = [];
     for (const style of JSON.parse(fs.readFileSync(path.join(root, 'styles.json')))) {
       const bytes = fs.readFileSync(path.join(root, 'fixed', style.file)).toString('base64');
@@ -46,4 +47,4 @@ const assert = require('assert');
       'Chromium did not select each installed Compact weight/style by the requested family name');
     console.log(`::notice title=Chromium font matching::All 16 weights/styles match directly loaded fonts; browser ${browser.version()}`);
   } finally { await browser.close(); }
-})().catch(e => { console.error(e); process.exit(1); });
+})().catch(e => { console.error(`::error::${String(e.stack || e).replace(/\n/g, '%0A')}`); process.exit(1); });

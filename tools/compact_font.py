@@ -73,6 +73,27 @@ def remove_hints(font):
     for tag in ('fpgm', 'prep', 'cvt ', 'hdmx', 'LTSH', 'VDMX', 'DSIG'):
         if tag in font:
             del font[tag]
+    if 'glyf' in font:
+        font['maxp'].maxZones = 1
+
+
+def simple_flags(flags, overlap=False):
+    """OVERLAP_SIMPLE belongs on the first point, never on child start points."""
+    require(not any(f & 0x80 for f in flags), 'Unsupported reserved TrueType point flag')
+    overlap = overlap or any(f & 0x40 for f in flags)
+    result = bytearray(f & ~0x40 for f in flags)
+    if result and overlap:
+        result[0] |= 0x40
+    return result
+
+
+def normalize_simple_overlaps(font):
+    """Repair old compact binaries in the controlled Windows comparison only."""
+    for glyph in font['glyf'].glyphs.values():
+        glyph.expand(font['glyf'])
+        if glyph.numberOfContours > 0:
+            glyph.flags = simple_flags(glyph.flags)
+    font['maxp'].maxZones = max(1, font['maxp'].maxZones)
 
 
 def static_glyf(font):
@@ -88,7 +109,8 @@ def static_glyf(font):
         if ends:
             glyph.coordinates = GlyphCoordinates(coords)
             glyph.endPtsOfContours = list(ends)
-            glyph.flags = bytearray(flags)
+            compound_overlap = glyf[name].isComposite() and any(c.flags & 0x400 for c in glyf[name].components)
+            glyph.flags = simple_flags(flags, compound_overlap)
             glyph.program = Program()
             glyph.program.fromBytecode(b'')
             glyph.recalcBounds(glyf)
@@ -202,11 +224,14 @@ def verify_static(original, font, hinted):
             width, _ = original['hmtx'][name]
             expected = 1000 if width == 1200 else 500 if width else 0
             require(font['hmtx'][name][0] == expected, f'Wrong advance: {name}')
-            a, ep, _ = original['glyf'][name].getCoordinates(original['glyf'])
-            b, eq, _ = font['glyf'][name].getCoordinates(font['glyf'])
+            a, ep, af = original['glyf'][name].getCoordinates(original['glyf'])
+            b, eq, bf = font['glyf'][name].getCoordinates(font['glyf'])
             require(list(ep) == list(eq), f'Contour endpoints changed: {name}')
             wanted = [(x - 100, y) if width == 1200 else (round(x * SCALE), y) for x, y in a]
             require(list(b) == wanted, f'Unexpected outline transform: {name}')
+            require([f & 1 for f in af] == [f & 1 for f in bf], f'On/off-curve point flags changed: {name}')
+            require(not any(f & 0xC0 for f in bf[1:]) and (not bf or not bf[0] & 0x80),
+                    f'Invalid serialized overlap/reserved flag: {name}')
         for cp in range(0x4E00, 0xA000):
             name = cmap.get(cp)
             if name:
@@ -264,6 +289,8 @@ def verify_font(source, target, hinted=False):
             require('fpgm' in font and 'prep' in font, 'Hinted package lacks regenerated instructions')
         else:
             require(not any(t in font for t in ('fpgm', 'prep', 'cvt ')), 'Outdated hinting retained')
+        if 'glyf' in font:
+            require(font['maxp'].maxZones in (1, 2), 'Invalid TrueType maxZones')
         detail = verify_variable(original, font) if variable else verify_static(original, font, hinted)
         return {'file': target.name, 'family': font['name'].getDebugName(1), 'glyphs': len(font.getGlyphOrder()),
                 'variable': variable, 'hinted': hinted, 'wws_family_declared': True, 'all_name_records_verified': True,
