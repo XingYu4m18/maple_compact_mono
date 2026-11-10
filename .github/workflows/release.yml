@@ -1,0 +1,117 @@
+name: Build and publish fonts
+
+on:
+  push:
+    tags: ['v[0-9]*']
+  workflow_dispatch:
+    inputs:
+      upstream_version:
+        description: 'Maple Mono stable version, or latest'
+        required: true
+        default: latest
+        type: string
+
+permissions:
+  contents: write
+
+concurrency:
+  group: compact-release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  prepare:
+    runs-on: ubuntu-24.04
+    outputs:
+      matrix: ${{ steps.catalog.outputs.matrix }}
+      tag: ${{ steps.catalog.outputs.tag }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+      - run: python -m pip install -r requirements.txt
+      - id: catalog
+        name: Resolve upstream packages
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REQUESTED_VERSION: ${{ inputs.upstream_version || github.ref_name }}
+        run: |
+          python tools/build_compact.py --upstream-version "$REQUESTED_VERSION" --catalog-only --output-dir dist
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          catalog = json.loads(Path('dist/catalog.json').read_text())
+          matrix = json.loads(Path('dist/matrix.json').read_text())
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as f:
+              f.write('tag=' + catalog['tag'] + '\n')
+              f.write('matrix=' + json.dumps(matrix) + '\n')
+          PY
+      - name: Create draft release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ steps.catalog.outputs.tag }}
+        run: |
+          if gh release view "$TAG" --json isDraft > dist/release.json 2>/dev/null; then
+            python -c "import json; assert json.load(open('dist/release.json'))['isDraft'], 'Release already published; do not overwrite it'"
+            gh release edit "$TAG" --notes-file dist/release-notes.md
+          else
+            gh release create "$TAG" --target "$GITHUB_SHA" --title "Maple Compact Mono $TAG" --notes-file dist/release-notes.md --draft
+          fi
+
+  build:
+    needs: prepare
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    strategy:
+      fail-fast: false
+      max-parallel: 16
+      matrix: ${{ fromJSON(needs.prepare.outputs.matrix) }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+      - run: python -m pip install -r requirements.txt
+      - name: Compact and verify every font in package
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ needs.prepare.outputs.tag }}
+          ASSET: ${{ matrix.asset }}
+        run: |
+          python tools/build_compact.py --upstream-version "$VERSION" --asset "$ASSET" --output-dir dist
+      - name: Upload verified package and SHA256
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ needs.prepare.outputs.tag }}
+          ASSET: ${{ matrix.asset }}
+        run: |
+          COMPACT_ASSET="${ASSET/MapleMono/MapleCompactMono}"
+          gh release upload "$TAG" "dist/$COMPACT_ASSET" "dist/${COMPACT_ASSET%.zip}.sha256" --clobber
+
+  publish:
+    needs: [prepare, build]
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+      - run: python -m pip install -r requirements.txt
+      - name: Verify release completeness and publish
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ needs.prepare.outputs.tag }}
+        run: |
+          python tools/build_compact.py --upstream-version "$TAG" --catalog-only --output-dir dist
+          gh release view "$TAG" --json assets > dist/uploaded.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          catalog = json.loads(Path('dist/catalog.json').read_text())
+          uploaded = json.loads(Path('dist/uploaded.json').read_text())['assets']
+          actual = {a['name'] for a in uploaded if a['size'] > 0}
+          expected = {name for p in catalog['packages'] for name in (p['output'], p['output'][:-4] + '.sha256')}
+          assert actual == expected, {'missing': sorted(expected - actual), 'unexpected': sorted(actual - expected)}
+          print('Verified release assets:', len(actual))
+          PY
+          gh release edit "$TAG" --draft=false --latest

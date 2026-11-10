@@ -1,279 +1,140 @@
 # Maple Compact Mono
 
-基于 [Maple Mono](https://github.com/subframe7536/maple-font) 的非官方字体实验仓库，尝试在保留中文原有字形大小的同时，缩窄英文并减少中文左右留白。
+**让 Maple Mono 的英文更紧凑，让中文回到自然的字间距。**
 
-当前附带 **Maple Compact NF CN** 成品：英文占宽 **500**、中文占宽 **1000**，保留中英文 **2∶1** 的宽度关系，以及原版的连字规则和 Nerd Fonts 图标。构建脚本同时支持普通版、NF、CN、NF CN 四种组合及它们的 NL（无连字）版本。
+Maple Mono 的圆角和连字很适合编程，但 CN 版本为了保持中英文 2∶1 对齐，将英文字符设置为 600 单位、中文占位设置为 1200 单位，中文左右的留白因此比较明显。
 
-本项目不是 Maple Mono 官方版本，也不代表上游作者认可或推荐。当前属于实验性派生字体，建议与原版并存试用。
+Maple Compact Mono 将英文横向收窄到原来的 **5/6**，占宽由 **600 改为 500**；中文占位由 **1200 改为 1000**，中文字形本身不缩小。这样既保留了中英文 2∶1 对齐，也减少了中文两侧留白。
 
-## 为什么制作
+## 效果预览
 
-Maple Mono NF CN 7.9 的英文占宽为 600，中文占宽为 1200。较宽的中文占位保证了中英文对齐，但也使中文左右留白比较明显。
+同一字号下，从上到下分别是等距更纱、Maple Mono 原版、Maple Compact Mono：
 
-含中文字库的变体采用以下方式处理；不含中文字库的普通版和 NF 版只处理已有的英文、符号和图标，不会额外加入中文：
+![更纱、Maple Mono 与 Maple Compact Mono 对比](docs/assets/comparison.png)
 
-| 项目 | 上游原版 | Compact 变体 |
-| :--- | ---: | ---: |
-| em 单位 | 1000 | 1000 |
+斜体对比，上方为原版，下方为 Compact：
+
+![原版与 Compact 斜体对比](docs/assets/comparison-italic.png)
+
+| | Maple Mono | Maple Compact Mono |
+| :--- | :--- | :--- |
 | 英文占宽 | 600 | 500 |
-| 中文占宽 | 1200 | 1000 |
-| 英文字形 | 原宽度 | 横向缩至 5/6，高度保持不变 |
-| 中文字形 | 原大小 | 保持大小，仅向左平移 100 单位以居中 |
-| 中英文宽度关系 | 2∶1 | 2∶1 |
+| 中文占宽（CN） | 1200 | 1000 |
+| 中文字形大小 | 原大小 | 保持原大小 |
+| 中英文对齐 | 2∶1 | 2∶1 |
+| 连字、字符变体与 NF 图标 | 上游提供 | 保留上游规则，英文和图标随字宽收窄 |
+| 可变字体 | 字重轴 | 保留字重轴 |
 
-实现按上游字形的占宽分类：1200 单位的全宽字形保持轮廓大小；600 单位字形以及零占宽的组合字形进行横向缩放。NF 图标也会随之横向收窄；没有新增、删除或重新设计图标。
+## 下载
 
-## 效果对比
+**中文编程和终端使用，建议先下载 [MapleCompactMono-NF-CN-unhinted.zip](https://github.com/XingYu4m18/maple_compact_mono/releases/latest/download/MapleCompactMono-NF-CN-unhinted.zip)。**
 
-下面依次为等距更纱、Maple Mono NF CN 原版和本项目的 Compact 变体，使用相同的名义字号：
+完整下载与版本记录：[Releases](https://github.com/XingYu4m18/maple_compact_mono/releases)。当前完整构建基于 Maple Mono **v7.9**，下载包与上游一一对应，只在 `Maple` 后加入 `Compact`。每个静态包包含全部 **8 个字重及其斜体，共 16 个字体文件**；可变字体包包含正体、斜体两个带字重轴的字体文件。
 
-![等距更纱、原版 Maple 与 Compact 对比](docs/assets/comparison.png)
+| 格式 / 分类 | 默认连字 | NL 无连字 | Normal 连字 | NormalNL 无连字 |
+| :--- | :---: | :---: | :---: | :---: |
+| Variable | [下载](https://github.com/XingYu4m18/maple_compact_mono/releases/latest/download/MapleCompactMono-Variable.zip) | [下载](https://github.com/XingYu4m18/maple_compact_mono/releases/latest/download/MapleCompactMonoNL-Variable.zip) | [下载](https://github.com/XingYu4m18/maple_compact_mono/releases/latest/download/MapleCompactMonoNormal-Variable.zip) | [下载](https://github.com/XingYu4m18/maple_compact_mono/releases/latest/download/MapleCompactMonoNormalNL-Variable.zip) |
+| TTF | [下载](https://github.com/XingYu4m18/maple_compact_mono/releases/latest/download/MapleCompactMono-TTF.zip) | [下载](https://github.com/XingYu4m18/maple_compact_mono/releases/latest/download/MapleCompactMonoNL-TTF.zip) | [下载](https://github.com/XingYu4m18/maple_compact_mono/releases/latest/download/MapleCompactMonoNormal-TTF.zip) | [下载](https://github.com/XingYu4m18/maple_compact_mono/releases/latest/download/MapleCompactMonoNormalNL-TTF.zip) |
+| TTF AutoHint | [下载](https://github.com/XingYu4m18/maple_compact_mono/releases/latest/download/MapleCompactMono-TTF-AutoHint.zip) | [下载](https://github.com/XingYu4m18/maple_compact_mono/releases/latest/download/MapleCompactMonoNL-TTF-AutoHint.zip) | [下载](https://github.com/XingYu4m18/maple_compact_mono/releases/latest/download/MapleCompactMonoNormal-TTF-AutoHint.zip) | [下载](https://github.com/XingYu4m18/maple_compact_mono/releases/latest/download/MapleCompactMonoNormalNL-TTF-AutoHint.zip) |
+| OTF | [下载](https://github.com/XingYu4m18/maple_compact_mono/releases/latest/download/MapleCompactMono-OTF.zip) | [下载](https://github.com/XingYu4m18/maple_compact_mono/releases/latest/download/MapleCompactMonoNL-OTF.zip) | [下载](https://github.com/XingYu4m18/maple_compact_mono/releases/latest/download/MapleCompactMonoNormal-OTF.zip) | [下载](https://github.com/XingYu4m18/maple_compact_mono/releases/latest/download/MapleCompactMonoNormalNL-OTF.zip) |
+| WOFF2 | [下载](https://github.com/XingYu4m18/maple_compact_mono/releases/latest/download/MapleCompactMono-Woff2.zip) | [下载](https://github.com/XingYu4m18/maple_compact_mono/releases/latest/download/MapleCompactMonoNL-Woff2.zip) | [下载](https://github.com/XingYu4m18/maple_compact_mono/releases/latest/download/MapleCompactMonoNormal-Woff2.zip) | [下载](https://github.com/XingYu4m18/maple_compact_mono/releases/latest/download/MapleCompactMonoNormalNL-Woff2.zip) |
+| NF | [下载](https://github.com/XingYu4m18/maple_compact_mono/releases/latest/download/MapleCompactMono-NF-unhinted.zip) | [下载](https://github.com/XingYu4m18/maple_compact_mono/releases/latest/download/MapleCompactMonoNL-NF-unhinted.zip) | [下载](https://github.com/XingYu4m18/maple_compact_mono/releases/latest/download/MapleCompactMonoNormal-NF-unhinted.zip) | [下载](https://github.com/XingYu4m18/maple_compact_mono/releases/latest/download/MapleCompactMonoNormalNL-NF-unhinted.zip) |
+| NF hinted | [下载](https://github.com/XingYu4m18/maple_compact_mono/releases/latest/download/MapleCompactMono-NF.zip) | [下载](https://github.com/XingYu4m18/maple_compact_mono/releases/latest/download/MapleCompactMonoNL-NF.zip) | [下载](https://github.com/XingYu4m18/maple_compact_mono/releases/latest/download/MapleCompactMonoNormal-NF.zip) | [下载](https://github.com/XingYu4m18/maple_compact_mono/releases/latest/download/MapleCompactMonoNormalNL-NF.zip) |
+| CN | [下载](https://github.com/XingYu4m18/maple_compact_mono/releases/latest/download/MapleCompactMono-CN-unhinted.zip) | [下载](https://github.com/XingYu4m18/maple_compact_mono/releases/latest/download/MapleCompactMonoNL-CN-unhinted.zip) | [下载](https://github.com/XingYu4m18/maple_compact_mono/releases/latest/download/MapleCompactMonoNormal-CN-unhinted.zip) | [下载](https://github.com/XingYu4m18/maple_compact_mono/releases/latest/download/MapleCompactMonoNormalNL-CN-unhinted.zip) |
+| CN hinted | [下载](https://github.com/XingYu4m18/maple_compact_mono/releases/latest/download/MapleCompactMono-CN.zip) | [下载](https://github.com/XingYu4m18/maple_compact_mono/releases/latest/download/MapleCompactMonoNL-CN.zip) | [下载](https://github.com/XingYu4m18/maple_compact_mono/releases/latest/download/MapleCompactMonoNormal-CN.zip) | [下载](https://github.com/XingYu4m18/maple_compact_mono/releases/latest/download/MapleCompactMonoNormalNL-CN.zip) |
+| NF-CN | [下载](https://github.com/XingYu4m18/maple_compact_mono/releases/latest/download/MapleCompactMono-NF-CN-unhinted.zip) | [下载](https://github.com/XingYu4m18/maple_compact_mono/releases/latest/download/MapleCompactMonoNL-NF-CN-unhinted.zip) | [下载](https://github.com/XingYu4m18/maple_compact_mono/releases/latest/download/MapleCompactMonoNormal-NF-CN-unhinted.zip) | [下载](https://github.com/XingYu4m18/maple_compact_mono/releases/latest/download/MapleCompactMonoNormalNL-NF-CN-unhinted.zip) |
+| NF-CN hinted | [下载](https://github.com/XingYu4m18/maple_compact_mono/releases/latest/download/MapleCompactMono-NF-CN.zip) | [下载](https://github.com/XingYu4m18/maple_compact_mono/releases/latest/download/MapleCompactMonoNL-NF-CN.zip) | [下载](https://github.com/XingYu4m18/maple_compact_mono/releases/latest/download/MapleCompactMonoNormal-NF-CN.zip) | [下载](https://github.com/XingYu4m18/maple_compact_mono/releases/latest/download/MapleCompactMonoNormalNL-NF-CN.zip) |
 
-斜体对比：上方为原版，下方为 Compact 变体。
+选包说明：
 
-![原版和 Compact 的斜体对比](docs/assets/comparison-italic.png)
+- **默认 / NL / Normal / NormalNL**：分别是默认连字、默认无连字、接近传统编程字体造型的连字与无连字版本。
+- **NF**：包含 Nerd Fonts 图标；**CN**：包含中日文字形；**NF-CN**：同时包含图标与中文字形。
+- **TTF / OTF**：适合桌面应用；**WOFF2**：适合网页；**Variable**：适合支持可变字体的应用。
+- **hinted / AutoHint**：针对收窄后的 TrueType 字体重新生成 hinting；**unhinted**：不带该指令。不要将旧字宽下的 hinting 直接沿用到新字体。
 
-图片用于观察排版差异；不同操作系统、应用和字号下的实际效果可能不同。对比图中的更纱字体本身不包含在本仓库中。
+同一造型的 hinted 与 unhinted 使用相同字体家族名，选择其中一种安装即可。字体内部名称保留上游的后缀，例如 `Maple Mono NF CN` 对应 `Maple Compact Mono NF CN`，`MapleMonoNormalNL-Bold.ttf` 对应 `MapleCompactMonoNormalNL-Bold.ttf`。
 
-## 当前字体
-
-仓库附带字体的家族名：**`Maple Compact NF CN`**。目前提供四个静态字重样式：
-
-| 样式 | 文件 |
-| :--- | :--- |
-| 常规 | [MapleCompactNFCN-Regular.ttf](fonts/maple_compact_nf_cn/MapleCompactNFCN-Regular.ttf) |
-| 粗体 | [MapleCompactNFCN-Bold.ttf](fonts/maple_compact_nf_cn/MapleCompactNFCN-Bold.ttf) |
-| 斜体 | [MapleCompactNFCN-Italic.ttf](fonts/maple_compact_nf_cn/MapleCompactNFCN-Italic.ttf) |
-| 粗斜体 | [MapleCompactNFCN-BoldItalic.ttf](fonts/maple_compact_nf_cn/MapleCompactNFCN-BoldItalic.ttf) |
-
-在 GitHub 打开字体文件后，可以使用 **Download raw file** 下载；也可通过 **Code → Download ZIP** 下载整个仓库。尚未提供可变字体及其他字重。
-
-## 安装
-
-### Ubuntu / Linux
-
-在仓库根目录执行，无需 `sudo`：
-
-```bash
-mkdir -p "$HOME/.local/share/fonts/maple_compact_mono"
-cp fonts/maple_compact_nf_cn/*.ttf "$HOME/.local/share/fonts/maple_compact_mono/"
-cp OFL.txt "$HOME/.local/share/fonts/maple_compact_mono/"
-cp -R licenses "$HOME/.local/share/fonts/maple_compact_mono/"
-fc-cache -f "$HOME/.local/share/fonts/maple_compact_mono"
-fc-match 'Maple Compact NF CN'
-```
-
-查询结果应指向 `MapleCompactNFCN-Regular.ttf`。字体使用独立家族名称，不会覆盖 `Maple Mono NF CN` 或 `Sarasa Mono SC`。
+## 安装使用
 
 ### Windows
 
-下载四个 `.ttf` 文件，选中后右键选择“安装”（Windows 11 可能需要先选择“显示更多选项”），然后完整退出并重新打开需要使用字体的应用。
+解压下载包，选中需要的 `.ttf` 或 `.otf` 文件，右键选择“安装”。重新启动使用字体的应用，在字体列表中选择相应的 **Maple Compact Mono** 家族。
 
-### VS Code
+### Ubuntu / Linux
 
-在**当前使用的配置档**中，执行“首选项：打开用户设置(JSON)”，按需加入或修改：
-
-```json
-{
-  "editor.fontFamily": "'Maple Compact NF CN', monospace",
-  "editor.fontLigatures": true,
-  "terminal.integrated.fontFamily": "'Maple Compact NF CN', monospace",
-  "markdown.preview.fontFamily": "'Maple Compact NF CN', monospace"
-}
-```
-
-首次安装后，如果应用继续显示旧字体，请保存文件后**完整退出所有 VS Code 窗口并重新启动**。只执行 Reload Window 不一定能刷新进程中的字体列表。
-
-`markdown.preview.fontFamily` 针对 VS Code 内置预览；Markdown Preview Enhanced 使用自己的样式配置，需要单独设置。Emoji 的 PDF 显示效果也不由 NF 图标支持保证。
-
-## 已知限制
-
-- **中文斜体越界**：保持斜体中文字形原大小并移除横向留白后，一部分笔画会伸出 1000 单位的字符格。部分应用可能出现紧贴、重叠或裁切，不能保证所有终端、编辑器和 PDF 查看器都一致。
-- **小字号显示变化**：字形横向几何改变后，原有 TrueType hinting 不再适用，因此本变体移除了相关指令和全局 hinting 表。小字号清晰度可能与原版不同。
-- **英文外观改变**：英文、符号、连字组成部分和 NF 图标横向缩窄，不再具有原版的宽高比例。
-- **检查不是跨平台兼容性认证**：验证覆盖字形轮廓、字符映射、宽度、纵向度量和 GSUB 规则，不代表每个罕见字符、混排组合和应用都经过人工检查。
-- **仅四个样式**：不包含 Thin、Light、Medium、SemiBold 等字重，也没有可变字体。
-
-普通常规与粗体在 U+4E00～U+9FFF 范围的检查中未发现轮廓超出字符占位；斜体结果详见 [验证报告](reports/validation.json)。字体不会改变源文件中的字符或编译结果。
-
-## 重新构建
-
-需要 Python 3.10 或更新版本。脚本依赖锁定在 [requirements.txt](requirements.txt)，上游输入锁定在 [upstream.lock.json](upstream.lock.json)。
-
-在仓库根目录执行：
+将解压后的下载包文件夹复制到 `~/.local/share/fonts/`，然后执行：
 
 ```bash
-python3 -m venv .venv
-.venv/bin/python -m pip install -r requirements.txt
-.venv/bin/python tools/build_compact.py
+fc-cache -f
+fc-match 'Maple Compact Mono NF CN'
 ```
 
-Windows 可将 `.venv/bin/python` 换为 `.venv\Scripts\python.exe`。
+### macOS
 
-如果已经安装 `uv`，也可以直接运行，不必手动创建虚拟环境：
+在“字体册”中打开并安装解压后的字体文件，然后在应用中选择对应家族。
+
+首次安装后，已经运行的应用可能需要完整退出并重新打开才能识别新字体。普通版和 NF 版没有中文字库，中文显示依赖应用的备用字体；需要统一中英文外观时选择 CN 或 NF-CN。
+
+### 校验下载
+
+每个 ZIP 都有同名 `.sha256` 文件，内容是该 ZIP 的 SHA-256。Linux 上可以查看并对比：
 
 ```bash
-uv run --no-project --with-requirements requirements.txt python tools/build_compact.py
+sha256sum MapleCompactMono-NF-CN-unhinted.zip
+cat MapleCompactMono-NF-CN-unhinted.sha256
 ```
 
-默认下载上游 **7.9** 的 `MapleMono-NF-CN.zip`，验证压缩包与四个源字体的 SHA-256，再生成 `fonts/maple_compact_nf_cn/` 中的字体和 `reports/validation.json`。缓存保存在 `.cache/`，不提交到 Git。下载压缩包约 152 MiB，需要额外磁盘空间用于解压和构建。
+每包还附有 `compact-build.json`，记录来源版本、源压缩包校验值、字体数量、字体校验值和验证结果。
 
-也可以指定已下载的原版字体目录，脚本仍会核对源字体哈希：
+## 自行构建以后的新版
+
+需要 **Python 3.10+**。建议使用 [uv](https://docs.astral.sh/uv/) 管理脚本依赖：
 
 ```bash
-.venv/bin/python tools/build_compact.py --source-dir /path/to/original_ttf
+git clone https://github.com/XingYu4m18/maple_compact_mono.git
+cd maple_compact_mono
+uv run --with-requirements requirements.txt python tools/build_compact.py --all --upstream-version latest
 ```
 
-### 跟随上游更新
+脚本会查询上游最新稳定版，下载并校验各个发布包，处理其中所有字体，验证后按上游命名生成 ZIP 与 SHA-256。结果保存在 `dist/v版本号/`。完整构建涉及多个中文字库和数百个字体，需要一定的网络流量、磁盘空间和时间。
 
-默认仍锁定 7.9，避免下载仓库后产生不同结果。需要尝试上游最新**稳定版**时，显式执行：
+只构建自己需要的一包：
 
 ```bash
-.venv/bin/python tools/build_compact.py --upstream-version latest
+uv run --with-requirements requirements.txt python tools/build_compact.py \
+  --upstream-version latest \
+  --asset MapleMono-NF-CN-unhinted.zip
 ```
 
-也可以指定稳定版本号，例如：
+指定上游版本：
 
 ```bash
-.venv/bin/python tools/build_compact.py --upstream-version 7.9
+uv run --with-requirements requirements.txt python tools/build_compact.py --all --upstream-version 7.9
 ```
 
-只查询最新版本、下载地址和校验信息，不下载字体或构建：
+查看所选版本的全部下载包，不下载字体：
 
 ```bash
-.venv/bin/python tools/build_compact.py --upstream-version latest --resolve-only
+uv run --with-requirements requirements.txt python tools/build_compact.py --upstream-version latest --list
 ```
 
-显式选择版本时，默认输出在 `dist/upstream-版本号/`，不会覆盖仓库附带的 7.9 字体。解析出的上游版本、压缩包及源字体 SHA-256 会另存为验证报告旁的 `*.upstream.json`，便于记录实际处理了哪个版本。`latest` 表示**每次手动运行时查询**，不会定时检查、自动安装或修改编辑器设置；未认证的 GitHub API 请求可能受到限流。
+没有 uv 时，也可以创建 Python 虚拟环境，安装 `requirements.txt` 后直接运行同一脚本。仓库保存了 v7.9 的上游发布清单；指定更新版本时才查询新的清单，不会自动安装或替换本机字体。
 
-**不能保证任意未来版本直接兼容。** 脚本会先核对上游发布的压缩包哈希，再检查选中字体的结构、OFL 许可证元数据、1000 em 和 600/1200 字宽等前提。如果上游改变文件命名、字宽、字形格式，或引入当前尚未处理的定位表、可变字体、彩色字形表，脚本会报错停止，不会强行转换。此时需要更新适配代码，或继续使用已锁定的版本。
+### 在 GitHub Actions 构建并发布
 
-重新发布基于新版上游的字体时，还需复核该版本许可证、保留字体名称和图标组件声明，更新仓库中的许可证附件、对比图、验证报告及 `SHA256SUMS`；版本下载选项不能代替这些发布检查。
+在自己的仓库中打开 **Actions → Build and publish fonts → Run workflow**，填写上游版本号或 `latest`。也可以推送对应的版本标签，例如 `v7.9`。
 
-### 选择普通版、NF、CN 与 NL
+工作流按包并行构建，全部验证通过且下载包、校验文件齐全后，才发布 Release。已有公开 Release 不会被自动覆盖。未来上游若增加格式、修改字宽或字体结构，脚本会提示需要适配；日常构建无需修改脚本中的版本号。
 
-这些版本标记可以组合，NL 是独立的“无连字”开关：
+## 排版说明
 
-| `--variant` | 源版本 | 是否含中文 | 是否含 NF 图标 | 输出字体家族 |
-| :--- | :--- | :---: | :---: | :--- |
-| `mono` | Maple Mono TTF | 否 | 否 | Maple Compact Mono |
-| `nf` | Maple Mono NF | 否 | 是 | Maple Compact NF |
-| `cn` | Maple Mono CN | 是 | 否 | Maple Compact CN |
-| `nf-cn`（默认） | Maple Mono NF CN | 是 | 是 | Maple Compact NF CN |
+- 英文、符号和图标的横向比例会改变，这是紧凑排版的取舍。
+- 保持中文字形原大小并收紧占位后，部分中文斜体笔画会伸出字符格；某些应用可能出现紧贴或裁切。
+- 小字号清晰度取决于字体版本、操作系统与渲染器，可分别试用 hinted 和 unhinted。
+- 构建验证检查字符映射、OpenType 替换规则、几何变换及纵向度量；可变字体还检查多个字重位置。具体显示效果仍以使用的应用为准。
 
-例如，构建普通版或带中文但不带 NF 图标的版本：
+## 来源与协议
 
-```bash
-.venv/bin/python tools/build_compact.py --variant mono
-.venv/bin/python tools/build_compact.py --variant cn
-```
+基于 [Maple Mono](https://github.com/subframe7536/maple-font) 构建，字体继续使用 **SIL Open Font License 1.1**。保留版权与许可证，允许按协议使用、修改和再分发，不可将字体本身单独出售。
 
-构建无连字的 NF CN 版：
-
-```bash
-.venv/bin/python tools/build_compact.py --variant nf-cn --no-ligatures
-```
-
-脚本下载上游官方 NL 包，保留其中原有的 OpenType 规则，不通过直接删除 GSUB 表来去掉连字。NL 版本使用带 `NL` 的独立家族名，例如 `Maple Compact NL NF CN`。
-
-一次构建四种组合（默认每种生成常规、粗体、斜体、粗斜体四个样式）：
-
-```bash
-.venv/bin/python tools/build_compact.py --variant all
-```
-
-再加上 `--no-ligatures` 可构建四种对应的 NL 组合。支持和 `--upstream-version latest` 同时使用。不同变体的压缩包缓存、解压目录、输出家族名、字体文件名与验证报告均独立；不同上游版本按版本号分隔缓存和默认输出目录，但同一变体的字体家族名保持一致，安装新版时仍需留意系统里的旧版。
-
-默认输出在 `fonts/` 下各变体的子目录；使用 `--upstream-version` 时输出在 `dist/upstream-版本号/fonts/` 下。批量操作设置 `--output-dir` 时，脚本也会自动按变体创建子目录，避免文件互相覆盖。`--report` 只适用于单变体，批量操作会自动生成独立报告。
-
-仓库只附带最初的 NF CN 四个字体文件。其他变体需要自己构建；“支持四种组合”与“提供四个字重样式”是两件不同的事。不含 CN 的字体没有中文，中文显示仍依赖应用的备用字体。
-
-只生成常规样式，且不覆盖仓库自带字体：
-
-```bash
-.venv/bin/python tools/build_compact.py \
-  --styles Regular \
-  --output-dir dist/test_fonts \
-  --report dist/test_validation.json
-```
-
-这是对**上游已发布静态 TTF** 的几何变换，不是重新编译 Maple Mono 的原始字体工程。脚本固定了新构建文件的修改时间，但仓库中最初手工生成的历史二进制与重建结果不承诺逐字节相同；几何变换和保留规则由验证程序检查。
-
-## 验证
-
-校验仓库中四个字体文件的哈希：
-
-```bash
-sha256sum -c SHA256SUMS
-```
-
-对照锁定的上游字体，验证现有输出而不重建：
-
-```bash
-.venv/bin/python tools/build_compact.py --verify-only
-```
-
-验证项目包括：
-
-- 字形数量、顺序及 Unicode 字符映射保持一致。
-- GSUB 二进制保持一致，保留上游连字与替换规则。
-- 每个字形的占宽和轮廓坐标符合指定变换。
-- 中文全宽轮廓仅平移，不缩放；纵向度量保持一致。
-- 统计常用汉字范围的越界数量、最大越界量及示例。
-
-生成报告后可查看 [reports/validation.json](reports/validation.json)。如果重新构建并准备发布，需要同步更新 `SHA256SUMS`。
-
-已对 7.9 的普通版、NF、CN、NF CN 及其四种 NL 组合实际下载、构建并逐字形验证 **Regular 样式**，记录在 [reports/variants/](reports/variants/)。最初附带的 NF CN 成品另有四个样式的完整验证报告。这些记录不代表所有组合的所有字重、所有操作系统都经过测试。
-
-## 仓库结构
-
-```text
-maple_compact_mono/
-├── README.md
-├── OFL.txt
-├── THIRD_PARTY_NOTICES.md
-├── SHA256SUMS
-├── upstream.lock.json
-├── requirements.txt
-├── .cz.toml
-├── fonts/
-│   └── maple_compact_nf_cn/
-├── tools/
-│   └── build_compact.py
-├── reports/
-│   └── validation.json
-├── docs/assets/
-└── licenses/
-```
-
-后续变体可放在 `fonts/` 下各自的目录中，使用独立字体家族名，并补充构建输入、验证结果、对比图和许可证。
-
-## 提交规范
-
-使用 Commitizen 的 `cz_conventional_commits` 规范，配置见 [.cz.toml](.cz.toml)。提交格式为：
-
-```text
-type(scope): description
-```
-
-例如：
-
-```text
-feat(fonts): add compact Maple Mono NF CN variant
-fix(build): preserve full-width outline geometry
-docs(readme): explain installation and italic limitations
-```
-
-安装 Commitizen 后可执行 `cz commit` 交互创建提交，或使用 `cz check --rev-range HEAD~1..HEAD` 检查后续提交。第一次提交没有父提交，检查时可用 `git log -1 --pretty=%B | cz check`。
-
-## 许可证与来源
-
-字体按 **SIL Open Font License 1.1** 分发，保留上游版权与许可证，完整文本见 [OFL.txt](OFL.txt)。允许按协议修改和再分发；不得将字体本身单独出售，不得暗示上游作者背书，也需遵守保留字体名称的限制。
-
-嵌入图标及上游组件的版权、来源和附加许可证见 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) 与 [licenses/](licenses/)。本仓库未额外打包上游原版字体或更纱字体。
-
-- [Maple Mono 7.9](https://github.com/subframe7536/maple-font/releases/tag/v7.9)
-- [Maple Mono 官方中文说明](https://github.com/subframe7536/maple-font/blob/v7/README_CN.md)
-- [Resource Han Rounded / 资源圆体](https://github.com/CyanoHao/Resource-Han-Rounded)
-- [Nerd Fonts 3.4.0](https://github.com/ryanoasis/nerd-fonts/tree/v3.4.0)
-- [Sarasa Gothic / 更纱黑体（仅对比图）](https://github.com/be5invis/Sarasa-Gothic)
+完整协议见 [OFL.txt](OFL.txt)，中文与图标组件的来源和许可见 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) 及 [licenses/](licenses/)。字体下载包均附带这些文件。

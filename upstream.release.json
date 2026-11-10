@@ -1,0 +1,273 @@
+{
+  "tag_name": "v7.9",
+  "draft": false,
+  "prerelease": false,
+  "html_url": "https://github.com/subframe7536/maple-font/releases/tag/v7.9",
+  "published_at": "2025-12-05T12:40:29Z",
+  "assets": [
+    {
+      "name": "MapleMono-CN-unhinted.zip",
+      "size": 140216987,
+      "digest": "sha256:d41cb72721e99cfe4fbd1a7b0f182a013457de46aa612018f924dd024699d3b9",
+      "browser_download_url": "https://github.com/subframe7536/maple-font/releases/download/v7.9/MapleMono-CN-unhinted.zip"
+    },
+    {
+      "name": "MapleMono-CN.zip",
+      "size": 140799242,
+      "digest": "sha256:cb1e79b2c23dff772ae351784ef2b84454a61b3920e9b20bd5db4bf207e4472d",
+      "browser_download_url": "https://github.com/subframe7536/maple-font/releases/download/v7.9/MapleMono-CN.zip"
+    },
+    {
+      "name": "MapleMono-NF-CN-unhinted.zip",
+      "size": 158916064,
+      "digest": "sha256:ab88522932cf4015dffeaef6dedc59a22a5fefecdcc6e583d9fcd997da5b7cac",
+      "browser_download_url": "https://github.com/subframe7536/maple-font/releases/download/v7.9/MapleMono-NF-CN-unhinted.zip"
+    },
+    {
+      "name": "MapleMono-NF-CN.zip",
+      "size": 159498447,
+      "digest": "sha256:af913b6322905348b3f50e4397fedc35b3a880db5effcce7969003051dcd3e94",
+      "browser_download_url": "https://github.com/subframe7536/maple-font/releases/download/v7.9/MapleMono-NF-CN.zip"
+    },
+    {
+      "name": "MapleMono-NF-unhinted.zip",
+      "size": 20560550,
+      "digest": "sha256:8248d6260660be1066b5ebe90d25131582df8383f38db1c284dd1f2dc9d2b46e",
+      "browser_download_url": "https://github.com/subframe7536/maple-font/releases/download/v7.9/MapleMono-NF-unhinted.zip"
+    },
+    {
+      "name": "MapleMono-NF.zip",
+      "size": 21151049,
+      "digest": "sha256:59098b87c895d871635d37680e88000ae2b2b25b55428195b228ec589e35fb89",
+      "browser_download_url": "https://github.com/subframe7536/maple-font/releases/download/v7.9/MapleMono-NF.zip"
+    },
+    {
+      "name": "MapleMono-OTF.zip",
+      "size": 1781871,
+      "digest": "sha256:ecf47b851ae4001b00564399511af8dc9615339d3ae9ded54e8547d6d1ad3da1",
+      "browser_download_url": "https://github.com/subframe7536/maple-font/releases/download/v7.9/MapleMono-OTF.zip"
+    },
+    {
+      "name": "MapleMono-TTF-AutoHint.zip",
+      "size": 2439648,
+      "digest": "sha256:c83b45a07dcdceacbd49986a862b56f60f31c8b976546faea1a3f2ba3dba4035",
+      "browser_download_url": "https://github.com/subframe7536/maple-font/releases/download/v7.9/MapleMono-TTF-AutoHint.zip"
+    },
+    {
+      "name": "MapleMono-TTF.zip",
+      "size": 1845297,
+      "digest": "sha256:3a35f8f0669bef3dded9df208cc4526a6f7573210e134816e9084a8981271d75",
+      "browser_download_url": "https://github.com/subframe7536/maple-font/releases/download/v7.9/MapleMono-TTF.zip"
+    },
+    {
+      "name": "MapleMono-Variable.zip",
+      "size": 382064,
+      "digest": "sha256:b9e57677cc4ec069ce178bd965d66cd14bd26c12e37d89d786ff959339bf8c93",
+      "browser_download_url": "https://github.com/subframe7536/maple-font/releases/download/v7.9/MapleMono-Variable.zip"
+    },
+    {
+      "name": "MapleMono-Woff2.zip",
+      "size": 1299498,
+      "digest": "sha256:5e38e83b007e7157c253c3f57c0a6f80415378f4859d43eb3cf4b1d858001681",
+      "browser_download_url": "https://github.com/subframe7536/maple-font/releases/download/v7.9/MapleMono-Woff2.zip"
+    },
+    {
+      "name": "MapleMonoNL-CN-unhinted.zip",
+      "size": 140052416,
+      "digest": "sha256:80bf6db8920b2999d900e08f9e5031f7686baeb72dbdb80891f2c1ae9cec606f",
+      "browser_download_url": "https://github.com/subframe7536/maple-font/releases/download/v7.9/MapleMonoNL-CN-unhinted.zip"
+    },
+    {
+      "name": "MapleMonoNL-CN.zip",
+      "size": 140623006,
+      "digest": "sha256:fd5a5c9a0dcc04b356b5ada97b922669cec09d47f32c7886abe3cb2da9b43643",
+      "browser_download_url": "https://github.com/subframe7536/maple-font/releases/download/v7.9/MapleMonoNL-CN.zip"
+    },
+    {
+      "name": "MapleMonoNL-NF-CN-unhinted.zip",
+      "size": 158751857,
+      "digest": "sha256:6d30ac6942726a5b53117c82e6b378144ac02a62a8e6b28702b961db86390ac9",
+      "browser_download_url": "https://github.com/subframe7536/maple-font/releases/download/v7.9/MapleMonoNL-NF-CN-unhinted.zip"
+    },
+    {
+      "name": "MapleMonoNL-NF-CN.zip",
+      "size": 159320985,
+      "digest": "sha256:6103d3a73d0095de6b34e709f3ecaf1147e35ab7717c03068e07c0bb0a8efa2e",
+      "browser_download_url": "https://github.com/subframe7536/maple-font/releases/download/v7.9/MapleMonoNL-NF-CN.zip"
+    },
+    {
+      "name": "MapleMonoNL-NF-unhinted.zip",
+      "size": 20397722,
+      "digest": "sha256:6b71f2b698715c199d607fa729bbc472a298c1072f5b5c515f7ca4057fce6009",
+      "browser_download_url": "https://github.com/subframe7536/maple-font/releases/download/v7.9/MapleMonoNL-NF-unhinted.zip"
+    },
+    {
+      "name": "MapleMonoNL-NF.zip",
+      "size": 20973854,
+      "digest": "sha256:f6b2c6d1981ca338729449dba0caf07ba05751edd1d4b474b46d7b316b3c0db3",
+      "browser_download_url": "https://github.com/subframe7536/maple-font/releases/download/v7.9/MapleMonoNL-NF.zip"
+    },
+    {
+      "name": "MapleMonoNL-OTF.zip",
+      "size": 1618905,
+      "digest": "sha256:059e205604eaaefc66f040aec18f70ed62dac18e45ab4d60e03847214643ef05",
+      "browser_download_url": "https://github.com/subframe7536/maple-font/releases/download/v7.9/MapleMonoNL-OTF.zip"
+    },
+    {
+      "name": "MapleMonoNL-TTF-AutoHint.zip",
+      "size": 2264254,
+      "digest": "sha256:ad8da819aa0254af386a077e39a347657aa8c6eff5585e26131f637321a2ab7f",
+      "browser_download_url": "https://github.com/subframe7536/maple-font/releases/download/v7.9/MapleMonoNL-TTF-AutoHint.zip"
+    },
+    {
+      "name": "MapleMonoNL-TTF.zip",
+      "size": 1679772,
+      "digest": "sha256:2f7f702a121cd910751849dde76f431d81a5be1618507f5724606d3147028b88",
+      "browser_download_url": "https://github.com/subframe7536/maple-font/releases/download/v7.9/MapleMonoNL-TTF.zip"
+    },
+    {
+      "name": "MapleMonoNL-Variable.zip",
+      "size": 361371,
+      "digest": "sha256:bfc2d8a46050e8d73da7c09a59badac1ec6ebd2cff6783548f9005ce5425b84f",
+      "browser_download_url": "https://github.com/subframe7536/maple-font/releases/download/v7.9/MapleMonoNL-Variable.zip"
+    },
+    {
+      "name": "MapleMonoNL-Woff2.zip",
+      "size": 1165233,
+      "digest": "sha256:ee68eea2553fb2b5fffba69b57ecb5e5ba5dd6132785485c900e3e680ed7d221",
+      "browser_download_url": "https://github.com/subframe7536/maple-font/releases/download/v7.9/MapleMonoNL-Woff2.zip"
+    },
+    {
+      "name": "MapleMonoNormal-CN-unhinted.zip",
+      "size": 140171842,
+      "digest": "sha256:4b0db76d17fd103d654862287a07f83b7c547991728b145122ada4201fd9aa8d",
+      "browser_download_url": "https://github.com/subframe7536/maple-font/releases/download/v7.9/MapleMonoNormal-CN-unhinted.zip"
+    },
+    {
+      "name": "MapleMonoNormal-CN.zip",
+      "size": 140714316,
+      "digest": "sha256:0ee9557b3f4c94564b667a45ee9fb22818f880d87bf170687c7b3d0151c584cb",
+      "browser_download_url": "https://github.com/subframe7536/maple-font/releases/download/v7.9/MapleMonoNormal-CN.zip"
+    },
+    {
+      "name": "MapleMonoNormal-NF-CN-unhinted.zip",
+      "size": 158866603,
+      "digest": "sha256:a4ff81ab62ec4bebb0a7ebcd035289fedc5518a4f2f63dc978141f67d19f181c",
+      "browser_download_url": "https://github.com/subframe7536/maple-font/releases/download/v7.9/MapleMonoNormal-NF-CN-unhinted.zip"
+    },
+    {
+      "name": "MapleMonoNormal-NF-CN.zip",
+      "size": 159410299,
+      "digest": "sha256:24aeb14ed756d78b112e6692ea02c669e16afaa0f01e7bfdbb37d2e63fa45fa7",
+      "browser_download_url": "https://github.com/subframe7536/maple-font/releases/download/v7.9/MapleMonoNormal-NF-CN.zip"
+    },
+    {
+      "name": "MapleMonoNormal-NF-unhinted.zip",
+      "size": 20513712,
+      "digest": "sha256:6e301f72472856e1b2f2f91d2522a46b41b6ae0c14c98ec82032dbfc1d820bc9",
+      "browser_download_url": "https://github.com/subframe7536/maple-font/releases/download/v7.9/MapleMonoNormal-NF-unhinted.zip"
+    },
+    {
+      "name": "MapleMonoNormal-NF.zip",
+      "size": 21058561,
+      "digest": "sha256:df1c1a5ee784c28a1ad228ae1335d3bb8239ac483db9db7f3ba986104e069772",
+      "browser_download_url": "https://github.com/subframe7536/maple-font/releases/download/v7.9/MapleMonoNormal-NF.zip"
+    },
+    {
+      "name": "MapleMonoNormal-OTF.zip",
+      "size": 1713833,
+      "digest": "sha256:695482b1a9840d87e1fb25367bb478cdc50b1566105fbab5402d4aa00f3bb0fa",
+      "browser_download_url": "https://github.com/subframe7536/maple-font/releases/download/v7.9/MapleMonoNormal-OTF.zip"
+    },
+    {
+      "name": "MapleMonoNormal-TTF-AutoHint.zip",
+      "size": 2350088,
+      "digest": "sha256:d4c78ce61c64995a0ce7c306635e31b027ef785113109acbd9a9967f9c877b22",
+      "browser_download_url": "https://github.com/subframe7536/maple-font/releases/download/v7.9/MapleMonoNormal-TTF-AutoHint.zip"
+    },
+    {
+      "name": "MapleMonoNormal-TTF.zip",
+      "size": 1796654,
+      "digest": "sha256:394bb22b577e2fe3d098778d4b17bbee5cbb73cdf715363250bb847bd71b877f",
+      "browser_download_url": "https://github.com/subframe7536/maple-font/releases/download/v7.9/MapleMonoNormal-TTF.zip"
+    },
+    {
+      "name": "MapleMonoNormal-Variable.zip",
+      "size": 381914,
+      "digest": "sha256:d6e77dcce1c5d68636392fd4d77a422e74602c31f465de63d5e222301fc5f637",
+      "browser_download_url": "https://github.com/subframe7536/maple-font/releases/download/v7.9/MapleMonoNormal-Variable.zip"
+    },
+    {
+      "name": "MapleMonoNormal-Woff2.zip",
+      "size": 1255986,
+      "digest": "sha256:3197324b7e25d6bc3e77dc0d5978f19a6d649a3b2f4cb8308ac3c60cb911e43c",
+      "browser_download_url": "https://github.com/subframe7536/maple-font/releases/download/v7.9/MapleMonoNormal-Woff2.zip"
+    },
+    {
+      "name": "MapleMonoNormalNL-CN-unhinted.zip",
+      "size": 140012613,
+      "digest": "sha256:a543f01a798d6b3f0367b122101b9cefb1690a007e980dee7995e5d08e729d45",
+      "browser_download_url": "https://github.com/subframe7536/maple-font/releases/download/v7.9/MapleMonoNormalNL-CN-unhinted.zip"
+    },
+    {
+      "name": "MapleMonoNormalNL-CN.zip",
+      "size": 140540740,
+      "digest": "sha256:20e31f4c2188e2da8519048a92b3cc0413eb02e3bb960c5f94ac7c65ad0a9e2d",
+      "browser_download_url": "https://github.com/subframe7536/maple-font/releases/download/v7.9/MapleMonoNormalNL-CN.zip"
+    },
+    {
+      "name": "MapleMonoNormalNL-NF-CN-unhinted.zip",
+      "size": 158705605,
+      "digest": "sha256:1bd6b4be3062e6ef2b4aaa44e044d05efa4501afd3c42367842154bdb0367d0b",
+      "browser_download_url": "https://github.com/subframe7536/maple-font/releases/download/v7.9/MapleMonoNormalNL-NF-CN-unhinted.zip"
+    },
+    {
+      "name": "MapleMonoNormalNL-NF-CN.zip",
+      "size": 159237818,
+      "digest": "sha256:af8082c484cb1103da6c2efa4b76f403fe342f9a3ac81ff665b8c6c66c2f8863",
+      "browser_download_url": "https://github.com/subframe7536/maple-font/releases/download/v7.9/MapleMonoNormalNL-NF-CN.zip"
+    },
+    {
+      "name": "MapleMonoNormalNL-NF-unhinted.zip",
+      "size": 20353013,
+      "digest": "sha256:df41f7ef14c8aab8c73618f3c8471f7dd94efb2b1b0289423d54e3246dd022eb",
+      "browser_download_url": "https://github.com/subframe7536/maple-font/releases/download/v7.9/MapleMonoNormalNL-NF-unhinted.zip"
+    },
+    {
+      "name": "MapleMonoNormalNL-NF.zip",
+      "size": 20889409,
+      "digest": "sha256:3a66478c969ad37df8b47cf67c064fc4d43afdad376cc71b49c09d18c0d719e4",
+      "browser_download_url": "https://github.com/subframe7536/maple-font/releases/download/v7.9/MapleMonoNormalNL-NF.zip"
+    },
+    {
+      "name": "MapleMonoNormalNL-OTF.zip",
+      "size": 1555102,
+      "digest": "sha256:59db4d19fa7f914648523b04a2f55ce135c02ce6c31626d237fb6184395c2df5",
+      "browser_download_url": "https://github.com/subframe7536/maple-font/releases/download/v7.9/MapleMonoNormalNL-OTF.zip"
+    },
+    {
+      "name": "MapleMonoNormalNL-TTF-AutoHint.zip",
+      "size": 2190722,
+      "digest": "sha256:9b187ed845c1a1a6562b2c264914a245a314539dd9ebb309c238a56549c9e80b",
+      "browser_download_url": "https://github.com/subframe7536/maple-font/releases/download/v7.9/MapleMonoNormalNL-TTF-AutoHint.zip"
+    },
+    {
+      "name": "MapleMonoNormalNL-TTF.zip",
+      "size": 1635786,
+      "digest": "sha256:5db24a284d2d04e527a775a47d418169eb1d1165818ff54659534bc06b7d61e7",
+      "browser_download_url": "https://github.com/subframe7536/maple-font/releases/download/v7.9/MapleMonoNormalNL-TTF.zip"
+    },
+    {
+      "name": "MapleMonoNormalNL-Variable.zip",
+      "size": 361764,
+      "digest": "sha256:fa7423c5377a587d2008209431ae16afaa49cee7dd75ca70c6c7f8632ca484b9",
+      "browser_download_url": "https://github.com/subframe7536/maple-font/releases/download/v7.9/MapleMonoNormalNL-Variable.zip"
+    },
+    {
+      "name": "MapleMonoNormalNL-Woff2.zip",
+      "size": 1125560,
+      "digest": "sha256:6fd6c8668657d4b55f108a115e59fa7a081757f29f599ebfc30a8558b85725bf",
+      "browser_download_url": "https://github.com/subframe7536/maple-font/releases/download/v7.9/MapleMonoNormalNL-Woff2.zip"
+    }
+  ]
+}
