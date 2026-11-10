@@ -52,7 +52,7 @@ def prepare(root):
                 require(not os2.fsSelection & (1 << 8), 'Expected historical font without WWS declaration')
                 require(all('Maple Mono' not in n.toUnicode() for n in names.names if n.nameID in (1, 3, 4, 6, 16, 21)),
                         'Historical font has an unrenamed family field')
-                styles.append({'file': source.name, 'weight': os2.usWeightClass,
+                styles.append({'file': source.name, 'full_name': names.getDebugName(4), 'weight': os2.usWeightClass,
                                'style': 'italic' if os2.fsSelection & 1 else 'normal'})
             for mode in modes[1:]:
                 with TTFont(source, recalcTimestamp=False) as font:
@@ -79,15 +79,43 @@ def prepare(root):
 
 def native(root, executable):
     results = {}
-    for mode, expected in [('original', '-'), ('dense', '-'), ('names_only', '-'), ('wws_only', FAMILY), ('fixed', FAMILY)]:
+    cases = [('original', '-'), ('dense', '-'), ('names_only', '-'), ('wws_only', FAMILY)] if (root / 'original').exists() else []
+    for mode, expected in cases + [('fixed', FAMILY)]:
         result = subprocess.run([str(executable), str(root / mode), expected], capture_output=True, text=True)
         print(mode, result.stdout, result.stderr, flush=True)
-        require(result.returncode == 0, 'DirectWrite check failed: ' + mode)
+        require(result.returncode == 0, 'DirectWrite check failed: ' + mode + ': ' + result.stdout + result.stderr)
         results[mode] = {'families': [s.removeprefix('FAMILY ') for s in result.stdout.splitlines() if s.startswith('FAMILY ')],
                          'native_log': result.stdout}
-    results['compact_word_hypothesis_reproduced'] = (results['original']['families'] == ['Maple Mono NF CN']
-                                                    and results['dense']['families'] == ['Maple Dense Mono NF CN'])
+        print('::notice title=DirectWrite ' + mode + '::' + json.dumps(results[mode]['families']), flush=True)
+    if cases:
+        results['compact_word_hypothesis_reproduced'] = (results['original']['families'] == ['Maple Mono NF CN']
+                                                        and results['dense']['families'] == ['Maple Dense Mono NF CN'])
+        print('::notice title=Compact name parsing hypothesis::' + str(results['compact_word_hypothesis_reproduced']), flush=True)
     (root / 'directwrite-results.json').write_text(json.dumps(results, indent=2))
+
+
+def prepare_candidate(root, archive):
+    """Test the actual uploaded release ZIP, without modifying its font bytes."""
+    root.mkdir(parents=True, exist_ok=True)
+    fixed = root / 'fixed'
+    fixed.mkdir(exist_ok=True)
+    expected = archive.with_suffix('.sha256').read_text().strip()
+    require(hashlib.sha256(archive.read_bytes()).hexdigest() == expected, 'Candidate package checksum mismatch')
+    styles = []
+    with zipfile.ZipFile(archive) as z:
+        manifest = json.loads(z.read('compact-build.json'))
+        require(manifest['font_count'] == 16, 'Candidate package is incomplete')
+        for entry in manifest['fonts']:
+            data = z.read(entry['file'])
+            require(hashlib.sha256(data).hexdigest() == entry['sha256'], 'Candidate font checksum mismatch')
+            target = fixed / Path(entry['file']).name
+            target.write_bytes(data)
+            with TTFont(target) as font:
+                require(font['OS/2'].fsSelection & (1 << 8), 'Candidate lacks WWS declaration')
+                require(font['name'].getBestFamilyName() == FAMILY, 'Wrong candidate family')
+                styles.append({'file': target.name, 'full_name': font['name'].getDebugName(4), 'weight': font['OS/2'].usWeightClass,
+                               'style': 'italic' if font['OS/2'].fsSelection & 1 else 'normal'})
+    (root / 'styles.json').write_text(json.dumps(styles, indent=2))
 
 
 def install(root):
@@ -111,10 +139,24 @@ if __name__ == '__main__':
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument('--root', type=Path, default=Path('dist/windows-check'))
     p.add_argument('--native', type=Path)
+    p.add_argument('--package', type=Path, help='Verify an actual candidate ZIP and its adjacent SHA256 instead of historical ablation cases')
     p.add_argument('--install-ci-fonts', action='store_true')
     args = p.parse_args()
-    prepare(args.root)
-    if args.native:
-        native(args.root, args.native.resolve())
-    if args.install_ci_fonts:
-        install(args.root)
+    try:
+        if args.package:
+            prepare_candidate(args.root, args.package)
+        else:
+            prepare(args.root)
+        if args.native:
+            native(args.root, args.native.resolve())
+        if args.install_ci_fonts:
+            install(args.root)
+            if args.native:
+                result = subprocess.run([str(args.native.resolve()), str(args.root / 'fixed'), FAMILY, '--system'],
+                                        capture_output=True, text=True)
+                print(result.stdout, result.stderr, flush=True)
+                require(result.returncode == 0, 'Installed DirectWrite family check failed: ' + result.stdout + result.stderr)
+                print('::notice title=Installed DirectWrite family::All 16 weights/styles match the correct system font files', flush=True)
+    except Exception as error:
+        print('::error::' + str(error).replace('\n', '%0A'), flush=True)
+        raise

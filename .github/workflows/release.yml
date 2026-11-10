@@ -10,6 +10,11 @@ on:
         required: true
         default: latest
         type: string
+      release_tag:
+        description: 'Optional output tag, e.g. v7.9-compact.1 (upstream remains v7.9)'
+        required: false
+        default: ''
+        type: string
 
 permissions:
   contents: write
@@ -24,6 +29,7 @@ jobs:
     outputs:
       matrix: ${{ steps.catalog.outputs.matrix }}
       tag: ${{ steps.catalog.outputs.tag }}
+      upstream_tag: ${{ steps.catalog.outputs.upstream_tag }}
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-python@v7
@@ -34,16 +40,27 @@ jobs:
         name: Resolve upstream packages
         env:
           GH_TOKEN: ${{ github.token }}
-          REQUESTED_VERSION: ${{ inputs.upstream_version || github.ref_name }}
+          INPUT_VERSION: ${{ inputs.upstream_version }}
+          INPUT_TAG: ${{ inputs.release_tag }}
         run: |
-          python tools/build_compact.py --upstream-version "$REQUESTED_VERSION" --catalog-only --output-dir dist
+          if [ "$GITHUB_EVENT_NAME" = push ]; then
+            VERSION="${GITHUB_REF_NAME%-compact.*}"
+            RELEASE_TAG="$GITHUB_REF_NAME"
+          else
+            VERSION="$INPUT_VERSION"
+            RELEASE_TAG="$INPUT_TAG"
+          fi
+          EXTRA_ARGS=()
+          if [ -n "$RELEASE_TAG" ]; then EXTRA_ARGS+=(--release-tag "$RELEASE_TAG"); fi
+          python tools/build_compact.py --upstream-version "$VERSION" "${EXTRA_ARGS[@]}" --catalog-only --output-dir dist
           python - <<'PY'
           import json, os
           from pathlib import Path
           catalog = json.loads(Path('dist/catalog.json').read_text())
           matrix = json.loads(Path('dist/matrix.json').read_text())
           with open(os.environ['GITHUB_OUTPUT'], 'a') as f:
-              f.write('tag=' + catalog['tag'] + '\n')
+              f.write('tag=' + catalog['release_tag'] + '\n')
+              f.write('upstream_tag=' + catalog['tag'] + '\n')
               f.write('matrix=' + json.dumps(matrix) + '\n')
           PY
       - name: Create draft release
@@ -75,10 +92,11 @@ jobs:
       - name: Compact and verify every font in package
         env:
           GH_TOKEN: ${{ github.token }}
-          VERSION: ${{ needs.prepare.outputs.tag }}
+          VERSION: ${{ needs.prepare.outputs.upstream_tag }}
+          RELEASE_TAG: ${{ needs.prepare.outputs.tag }}
           ASSET: ${{ matrix.asset }}
         run: |
-          python tools/build_compact.py --upstream-version "$VERSION" --asset "$ASSET" --output-dir dist
+          python tools/build_compact.py --upstream-version "$VERSION" --release-tag "$RELEASE_TAG" --asset "$ASSET" --output-dir dist
       - name: Upload verified package and SHA256
         env:
           GH_TOKEN: ${{ github.token }}
@@ -88,8 +106,14 @@ jobs:
           COMPACT_ASSET="${ASSET/MapleMono/MapleCompactMono}"
           gh release upload "$TAG" "dist/$COMPACT_ASSET" "dist/${COMPACT_ASSET%.zip}.sha256" --clobber
 
-  publish:
+  windows:
     needs: [prepare, build]
+    uses: ./.github/workflows/windows-font-check.yml
+    with:
+      release_tag: ${{ needs.prepare.outputs.tag }}
+
+  publish:
+    needs: [prepare, build, windows]
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v7
@@ -101,8 +125,9 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           TAG: ${{ needs.prepare.outputs.tag }}
+          VERSION: ${{ needs.prepare.outputs.upstream_tag }}
         run: |
-          python tools/build_compact.py --upstream-version "$TAG" --catalog-only --output-dir dist
+          python tools/build_compact.py --upstream-version "$VERSION" --release-tag "$TAG" --catalog-only --output-dir dist
           gh release view "$TAG" --json assets > dist/uploaded.json
           python - <<'PY'
           import json

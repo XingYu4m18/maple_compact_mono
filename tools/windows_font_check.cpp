@@ -56,7 +56,8 @@ void glyph_width(IDWriteFontFace* face, UINT32 cp, UINT32 expected) {
 }
 int wmain(int argc, wchar_t** argv) {
     try {
-        ensure(argc == 3, "Usage: windows_font_check.exe DIRECTORY EXPECTED_FAMILY_OR_DASH");
+        ensure(argc == 3 || argc == 4, "Usage: windows_font_check.exe DIRECTORY EXPECTED_FAMILY_OR_DASH [--system]");
+        const bool system = argc == 4 && std::wstring(argv[3]) == L"--system";
         ComPtr<IDWriteFactory3> factory;
         check(DWriteCreateFactory(DWRITE_FACTORY_TYPE_ISOLATED, __uuidof(IDWriteFactory3),
                                  reinterpret_cast<IUnknown**>(factory.GetAddressOf())));
@@ -83,14 +84,17 @@ int wmain(int argc, wchar_t** argv) {
         ComPtr<IDWriteFontCollection1> collection;
         check(builder->CreateFontSet(&font_set));
         check(factory->CreateFontCollectionFromFontSet(font_set.Get(), &collection));
+        if (system) check(factory->GetSystemFontCollection(FALSE, &collection, TRUE));
         std::set<std::wstring> families;
         for (UINT32 i = 0; i < collection->GetFontFamilyCount(); ++i) {
             ComPtr<IDWriteFontFamily> family;
             ComPtr<IDWriteLocalizedStrings> names;
             check(collection->GetFontFamily(i, &family));
             check(family->GetFamilyNames(&names));
-            families.insert(text(names.Get()));
-            std::wcout << L"FAMILY " << text(names.Get()) << L"\n";
+            if (!system || text(names.Get()) == argv[2]) {
+                families.insert(text(names.Get()));
+                std::wcout << L"FAMILY " << text(names.Get()) << L"\n";
+            }
         }
         std::wstring expected(argv[2]);
         if (expected == L"-") return 0;
@@ -118,7 +122,9 @@ int wmain(int argc, wchar_t** argv) {
             UINT32 count = 1;
             ComPtr<IDWriteFontFile> selected_file;
             check(selected_face->GetFiles(&count, selected_file.GetAddressOf()));
-            ensure(count == 1 && fs::equivalent(file_path(selected_file.Get()), paths[i]), "Wrong font file selected");
+            const auto selected_path = file_path(selected_file.Get());
+            ensure(count == 1 && (system ? selected_path.filename() == paths[i].filename() : fs::equivalent(selected_path, paths[i])),
+                   "Wrong font file selected");
             glyph_width(selected_face.Get(), 'A', 500);
             glyph_width(selected_face.Get(), 0x4E2D, 1000);
             std::wcout << L"MATCH " << paths[i].filename().wstring() << L" weight=" << weight

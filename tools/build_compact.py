@@ -137,7 +137,7 @@ def build_package(package, catalog, output, cache, styles=None):
             'Italic CJK may extend beyond character cells. Font rendering varies by application.\n'
             'See OFL.txt and THIRD_PARTY_NOTICES.md for licenses and attribution.\n'
         )
-        manifest = {'upstream_tag': catalog['tag'], 'source_package': package['name'],
+        manifest = {'upstream_tag': catalog['tag'], 'release_tag': catalog['release_tag'], 'source_package': package['name'],
                     'source_archive_sha256': package['sha256'], 'package': package['output'],
                     'font_count': len(reports), 'fonts': reports}
         (result / 'compact-build.json').write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + '\n')
@@ -151,10 +151,11 @@ def build_package(package, catalog, output, cache, styles=None):
 
 
 def release_notes(catalog, repo='XingYu4m18/maple_compact_mono'):
-    tag = catalog['tag']
+    tag = catalog['release_tag']
     lines = [f'# Maple Compact Mono {tag}', '',
-             f'基于 [Maple Mono {tag}]({catalog["source"]})，英文宽度由 600 收至 500，中文占位由 1200 收至 1000，中文字形大小保持不变。', '',
+             f'基于 [Maple Mono {catalog["tag"]}]({catalog["source"]})，英文宽度由 600 收至 500，中文占位由 1200 收至 1000，中文字形大小保持不变。', '',
              '覆盖上游全部字重、Ligature / NL / Normal / NormalNL，以及 TTF、OTF、WOFF2、Variable、NF、CN、NF-CN 各下载包。hinted 包重新生成 hinting，可变字体保留字重轴。', '',
+             '本修订声明 WWS 字体家族，修复 Windows DirectWrite 将 Compact 误作样式描述而从家族名中移除的问题。中文占位、字形和字体家族命名规则保持不变。发布前使用 Windows DirectWrite 与 Chromium 检查实际 NF-CN 包的全部 16 个字重／斜体。', '',
              '## 下载', '', '| 上游分类 | Compact 下载 | 校验 |', '| :--- | :--- | :--- |']
     for p in catalog['packages']:
         base = f'https://github.com/{repo}/releases/download/{tag}/'
@@ -168,6 +169,7 @@ def release_notes(catalog, repo='XingYu4m18/maple_compact_mono'):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--upstream-version', default='7.9', help='Stable upstream version, or latest')
+    parser.add_argument('--release-tag', help='Output release tag: upstream tag, optionally followed by -compact.N')
     parser.add_argument('--asset', help='One upstream or Compact .zip asset name')
     parser.add_argument('--all', action='store_true', help='Build every package in the upstream release')
     parser.add_argument('--list', action='store_true', help='List all supported packages without downloading fonts')
@@ -178,10 +180,14 @@ def main():
     args = parser.parse_args()
     require(not (args.all and args.asset), 'Select --all or --asset')
     catalog = release_catalog(args.upstream_version)
+    release_tag = args.release_tag or catalog['tag']
+    require(re.fullmatch(re.escape(catalog['tag']) + r'(?:-compact\.[1-9]\d*)?', release_tag),
+            'Release tag must match the upstream tag, optionally followed by -compact.N')
+    catalog['release_tag'] = release_tag
     if args.list:
         print('\n'.join(p['output'] for p in catalog['packages']))
         return
-    output = args.output_dir or ROOT / 'dist' / catalog['tag']
+    output = args.output_dir or ROOT / 'dist' / release_tag
     output.mkdir(parents=True, exist_ok=True)
     (output / 'catalog.json').write_text(json.dumps(catalog, ensure_ascii=False, indent=2) + '\n')
     (output / 'matrix.json').write_text(json.dumps({'asset': [p['name'] for p in catalog['packages']]}))
