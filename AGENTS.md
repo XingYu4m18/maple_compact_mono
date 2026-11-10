@@ -35,6 +35,12 @@
 
 这些数量是 **v7.9 的事实**。未来上游数量变化时，应按当次清单核对，不能硬编码为必须 44 包或 648 个字体。
 
+2026-11-10 后续公开修订：[v7.9-compact.1](https://github.com/XingYu4m18/maple_compact_mono/releases/tag/v7.9-compact.1)，仍基于上游 v7.9，包含重建后的全部 44 个包、648 个字体及 44 个校验文件。修复 WWS 家族声明和简单字形重叠标志，字体命名、500／1000 占宽及轮廓变换规则不变。原 v7.9 保留。
+
+全量构建见 [构建记录](https://github.com/XingYu4m18/maple_compact_mono/actions/runs/42801991225)，44 个字体包全部成功，随后候选检查曾因草稿下载授权失败而停止。修复工作流后，经源文件一致性与 88 个附件完整性检查，使用 [续检发布记录](https://github.com/XingYu4m18/maple_compact_mono/actions/runs/42806145969) 验证实际上传的 NF-CN hinted 包：全部 16 个字体通过 Windows DirectWrite 系统家族及文件选择、字宽检查，以及 Chromium 家族名渲染与直接加载对应文件的像素对照，并排除默认字体回退；最后公开发布。恢复流程跳过的是已经成功的重复构建，不是 Windows 验证。
+
+原开发机器下文的安装记录仍是初版 v7.9；是否安装修订版应另行核对。Windows 曾同时安装用户级和系统级旧版时，需要检查两处副本，安装时选用一套，避免旧副本遮蔽新版。
+
 ## 重要文件
 
 | 文件 | 用途 |
@@ -139,7 +145,7 @@ v7.9 上游有四个预设：`MapleMono`、`MapleMonoNL`、`MapleMonoNormal`、`
 
 故障背景：用户的 Windows 此前没有装过原版 Maple，DirectWrite 却把 Compact 文件列入 `Maple Mono NF CN`，而 Word 可见正确名称。原始 Compact 字体的名称已正确重命名；Windows 对照已证实仅补 16/17 仍会拆走 Compact，仅设置 WWS 标志即可保留它。另发现旧版展平的重叠标志位置不合法，影响直接加载 Web 字体。两项修订互相独立，都需要保留。
 
-已完成的 Windows 对照见 [2026-11-10 检查记录](https://github.com/XingYu4m18/maple_compact_mono/actions/runs/42800795652)：原版为 `Maple Mono NF CN`，仅改为 Dense 的对照保留完整新名称，仅补 name 16/17 仍去掉 Compact，仅补 WWS 即保留完整 Compact 名称。修正版全部 16 个字重／斜体通过系统 DirectWrite 文件选择检查，以及 Chromium 家族名、local 完整名称、直接加载字体三种路径的像素对照，并排除默认字体回退。这些测试不能由 Ubuntu 验证替代；每次正式发布仍须对实际 ZIP 重做 Windows 检查。
+已完成的 Windows 对照见 [2026-11-10 检查记录](https://github.com/XingYu4m18/maple_compact_mono/actions/runs/42800795652)：原版为 `Maple Mono NF CN`，仅改为 Dense 的对照保留完整新名称，仅补 name 16/17 仍去掉 Compact，仅补 WWS 即保留完整 Compact 名称。修正版全部 16 个字重／斜体通过系统 DirectWrite 文件选择检查，以及 Chromium 家族名与直接加载文件的像素对照，并排除默认字体回退；另记录 local 完整名称加载作为辅助诊断。这些测试不能由 Ubuntu 验证替代；每次正式发布仍须对实际 ZIP 重做 Windows 检查。
 
 发布注意：草稿 Release 的附件在公开仓库中也不是公开资源，Windows 候选检查使用仓库 `GITHUB_TOKEN` 的 `contents: write` 授权下载，并显式设置 `GH_REPO`。PowerShell 调用 gh 后必须立即检查退出码，不能在下载失败后继续 Python，否则只会得到误导性的“校验文件不存在”。
 
