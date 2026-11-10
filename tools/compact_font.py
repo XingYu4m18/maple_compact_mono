@@ -10,6 +10,23 @@ from fontTools.pens.t2CharStringPen import T2CharStringPen
 from fontTools.varLib.instancer import instantiateVariableFont
 
 SCALE = 5 / 6
+WWS_STYLES = {weight + slope for weight in ('Thin', 'ExtraLight', 'Light', 'Regular', 'Medium', 'SemiBold', 'Bold', 'ExtraBold')
+              for slope in ('', ' Italic')} | {'Italic'}
+
+
+def declare_wws_family(font):
+    """These Maple presets are separate families, varying only by weight/slope.
+
+    Without bit 8, Windows can reinterpret 'Compact' as a width qualifier.
+    ID 16/17 (falling back to 1/2) already express a WWS-only family; do not
+    add conflicting WWS names 21/22. Reject a changed upstream family model.
+    """
+    names, os2 = font['name'], font['OS/2']
+    require(os2.version >= 4, 'WWS declaration requires OS/2 version 4 or newer')
+    require(os2.usWidthClass == 5, 'Review changed upstream width classification')
+    require(not any(n.nameID in (21, 22) for n in names.names), 'Review upstream WWS names before changing the family model')
+    require(names.getBestSubFamilyName() in WWS_STYLES, 'Review non-WWS upstream subfamily')
+    os2.fsSelection |= 1 << 8
 
 
 def require(condition, message):
@@ -144,6 +161,7 @@ def build_font(source, target, hinted=False):
             cff_outlines(font)
         remove_hints(font)
         rename(font)
+        declare_wws_family(font)
         font['OS/2'].xAvgCharWidth = 500
         font['post'].isFixedPitch = 1
         font['hhea'].advanceWidthMax = max(w for w, _ in font['hmtx'].metrics.values())
@@ -233,6 +251,13 @@ def verify_font(source, target, hinted=False):
         require(font['name'].getDebugName(1) == compact_name(original['name'].getDebugName(1)), 'Family name does not follow upstream')
         require(font['name'].getDebugName(0) == original['name'].getDebugName(0), 'Copyright changed')
         require(font['name'].getDebugName(13) == original['name'].getDebugName(13), 'License metadata changed')
+        require(font['OS/2'].fsSelection == original['OS/2'].fsSelection | (1 << 8), 'WWS flag missing or other style flags changed')
+        require(not any(n.nameID in (21, 22) for n in font['name'].names), 'Conflicting WWS names')
+        renamed = {(n.nameID, n.platformID, n.platEncID, n.langID): n.toUnicode() for n in font['name'].names}
+        for n in original['name'].names:
+            expected = n.toUnicode() if n.nameID in (0, 7, 8, 9, 13, 14) else compact_name(n.toUnicode())
+            require(renamed.get((n.nameID, n.platformID, n.platEncID, n.langID)) == expected,
+                    f'Name record changed unexpectedly: {n.nameID}/{n.platformID}/{n.langID}')
         variable = 'fvar' in original
         require(('fvar' in font) == variable, 'Variable font became static')
         if hinted:
@@ -241,5 +266,6 @@ def verify_font(source, target, hinted=False):
             require(not any(t in font for t in ('fpgm', 'prep', 'cvt ')), 'Outdated hinting retained')
         detail = verify_variable(original, font) if variable else verify_static(original, font, hinted)
         return {'file': target.name, 'family': font['name'].getDebugName(1), 'glyphs': len(font.getGlyphOrder()),
-                'variable': variable, 'hinted': hinted, 'all_outlines_verified': True, 'cmap_identical': True,
+                'variable': variable, 'hinted': hinted, 'wws_family_declared': True, 'all_name_records_verified': True,
+                'all_outlines_verified': True, 'cmap_identical': True,
                 'gsub_identical': True, 'vertical_metrics_identical': True, **detail}
