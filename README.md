@@ -138,3 +138,7 @@ uv run --with-requirements requirements.txt python tools/build_compact.py --upst
 基于 [Maple Mono](https://github.com/subframe7536/maple-font) 构建，字体继续使用 **SIL Open Font License 1.1**。保留版权与许可证，允许按协议使用、修改和再分发，不可将字体本身单独出售。
 
 完整协议见 [OFL.txt](OFL.txt)，中文与图标组件的来源和许可见 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) 及 [licenses/](licenses/)。字体下载包均附带这些文件。
+
+## 后续维护与 AI 交接
+
+[AGENTS.md](AGENTS.md) 记录了项目初衷、字体处理规则、构建与发布流程、验证要求和已完成的工作。未来需要更新或请 AI 接手时，请先阅读这份交接说明；即使原始对话已经不存在，也能据此了解项目并继续维护。
