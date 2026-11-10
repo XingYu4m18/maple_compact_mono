@@ -1,0 +1,22 @@
+[
+  {
+    "style": "Regular",
+    "glyphs": 33637,
+    "widths": {
+      "500": 12238,
+      "0": 69,
+      "1000": 21330
+    },
+    "gsub_identical": true,
+    "cmap_identical": true,
+    "all_outlines_verified": true,
+    "vertical_metrics_identical": true,
+    "han_overhang_count": 0,
+    "han_overhang_max_units": 0,
+    "han_overhang_examples": [],
+    "file": "MapleCompactNLNFCN-Regular.ttf",
+    "sha256": "682545c5466ab29c4e2cdbcd9bbb25303be731c56704fb2ec1d6268163ebf5fe",
+    "upstream_version": "7.9",
+    "variant": "nl-nf-cn"
+  }
+]

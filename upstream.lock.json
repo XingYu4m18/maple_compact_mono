@@ -9,5 +9,87 @@
     "MapleMono-NF-CN-BoldItalic.ttf": "9d6e76fbb5767406efd1f5ae2d32f5439de3b4d4063b128e4186ad5619267120",
     "MapleMono-NF-CN-Italic.ttf": "39e6c6e611e65e6d0780f6279561f954f9db51221987d0924c45f6121eaf9054",
     "MapleMono-NF-CN-Regular.ttf": "bb8e8e8c263896f42555107202f1847f7a42c340a3e532df9c4d585c9794411c"
+  },
+  "variants": {
+    "mono": {
+      "asset_url": "https://github.com/subframe7536/maple-font/releases/download/v7.9/MapleMono-TTF.zip",
+      "archive_sha256": "3a35f8f0669bef3dded9df208cc4526a6f7573210e134816e9084a8981271d75",
+      "files": {
+        "MapleMono-Regular.ttf": "369583f0b555f33bdb6fdbcc2a6840a7a61a1d72c008a57a665baa36d7d5adf6",
+        "MapleMono-Bold.ttf": "e0623db6219886ce8906f440b9668acc7fab96b94e4036ac7a27809cd4bb72d7",
+        "MapleMono-Italic.ttf": "fde2a23a7062923761ac0e3c718718c181bdb9865325430175819eb55a495e90",
+        "MapleMono-BoldItalic.ttf": "c9d6a8f203c86409aa63eb2b5716bd854819e481a8bdbe0bba1f7a476e59080f"
+      }
+    },
+    "nf": {
+      "asset_url": "https://github.com/subframe7536/maple-font/releases/download/v7.9/MapleMono-NF.zip",
+      "archive_sha256": "59098b87c895d871635d37680e88000ae2b2b25b55428195b228ec589e35fb89",
+      "files": {
+        "MapleMono-NF-Regular.ttf": "dbf160ce96358056a47777e95a50af208b438312787cf20917ce2321066de8e5",
+        "MapleMono-NF-Bold.ttf": "cf6fb13160424257ea764a5deb1d55116c9ab5c347cb69c6be2576b44dc3d544",
+        "MapleMono-NF-Italic.ttf": "f20012da3a738ff070292aae453b5f7b47de3992451a581cd4ba6f7fed7b9785",
+        "MapleMono-NF-BoldItalic.ttf": "97a40e0a25c8adb2c9e29d755a127b7fae989debf40e9f62ca3e393b1de2d429"
+      }
+    },
+    "cn": {
+      "asset_url": "https://github.com/subframe7536/maple-font/releases/download/v7.9/MapleMono-CN.zip",
+      "archive_sha256": "cb1e79b2c23dff772ae351784ef2b84454a61b3920e9b20bd5db4bf207e4472d",
+      "files": {
+        "MapleMono-CN-Regular.ttf": "e6338c3dca9a3bed3fb81f43c8bb8feca3b6ad54829f5a3229527d030a321dbd",
+        "MapleMono-CN-Bold.ttf": "99254c34b3fe3214fd4b5d39ceb7bdf9f2be5d4f99efc75bf3a9705f8f8b318e",
+        "MapleMono-CN-Italic.ttf": "5dfb139185ce283fae76c678145fbd161bbd6b7dd9d7fd538da26889cbe87022",
+        "MapleMono-CN-BoldItalic.ttf": "32d10fd8d3d237f0f8e2d0713ce180c93b19c2b01c2a15086496c63932e1f6ba"
+      }
+    },
+    "nf-cn": {
+      "asset_url": "https://github.com/subframe7536/maple-font/releases/download/v7.9/MapleMono-NF-CN.zip",
+      "archive_sha256": "af913b6322905348b3f50e4397fedc35b3a880db5effcce7969003051dcd3e94",
+      "files": {
+        "MapleMono-NF-CN-Bold.ttf": "9e0c22a032c255b2da2c073d6cca6f8cf6fd6f214ae5407eb9f1aa523713729b",
+        "MapleMono-NF-CN-BoldItalic.ttf": "9d6e76fbb5767406efd1f5ae2d32f5439de3b4d4063b128e4186ad5619267120",
+        "MapleMono-NF-CN-Italic.ttf": "39e6c6e611e65e6d0780f6279561f954f9db51221987d0924c45f6121eaf9054",
+        "MapleMono-NF-CN-Regular.ttf": "bb8e8e8c263896f42555107202f1847f7a42c340a3e532df9c4d585c9794411c"
+      }
+    },
+    "nl-mono": {
+      "asset_url": "https://github.com/subframe7536/maple-font/releases/download/v7.9/MapleMonoNL-TTF.zip",
+      "archive_sha256": "2f7f702a121cd910751849dde76f431d81a5be1618507f5724606d3147028b88",
+      "files": {
+        "MapleMonoNL-Regular.ttf": "30fe0df56b3aee42c012e6bbbabd60cc531e4ded91a6453eb8823dab0882976f",
+        "MapleMonoNL-Bold.ttf": "bc0878fd823d39c310afc1ad9906b9408376d3cfb52f4af03d6297ffe376a834",
+        "MapleMonoNL-Italic.ttf": "aab7e17ba45ceb9bdcc815ea2206a20e96bb5c3f1bbafa4fec5e93cb3e852349",
+        "MapleMonoNL-BoldItalic.ttf": "b8b5a1e4ab14ad851167153a96bb695168acbb71e18705703e825d5fac310657"
+      }
+    },
+    "nl-nf": {
+      "asset_url": "https://github.com/subframe7536/maple-font/releases/download/v7.9/MapleMonoNL-NF.zip",
+      "archive_sha256": "f6b2c6d1981ca338729449dba0caf07ba05751edd1d4b474b46d7b316b3c0db3",
+      "files": {
+        "MapleMonoNL-NF-Regular.ttf": "aa3b096bc92df8503d77482b285a0567bafa6e83230d969700f455e610b1f655",
+        "MapleMonoNL-NF-Bold.ttf": "ff821f56aa26a5a983a4fc80e390633c2bdedccee61280b5e0833cb91fbc07d8",
+        "MapleMonoNL-NF-Italic.ttf": "94535758e20c8a65c231c2d3ee61d2bc39071f33bbe71d7d91e16fe64b556adb",
+        "MapleMonoNL-NF-BoldItalic.ttf": "e011b0bae51670ab966be25d6584d97cd1e03fa92ff1e461fb80d14c659d99fa"
+      }
+    },
+    "nl-cn": {
+      "asset_url": "https://github.com/subframe7536/maple-font/releases/download/v7.9/MapleMonoNL-CN.zip",
+      "archive_sha256": "fd5a5c9a0dcc04b356b5ada97b922669cec09d47f32c7886abe3cb2da9b43643",
+      "files": {
+        "MapleMonoNL-CN-Regular.ttf": "bb49cab8933a24b3727ca41434bf2dff923dd45e87ffcccc7c35a83c3580c2ec",
+        "MapleMonoNL-CN-Bold.ttf": "6944c8e4621837f4f288fd7413bcbcb3c177f4145af8a3948ec03732e466544a",
+        "MapleMonoNL-CN-Italic.ttf": "77b5711f4be8c26aad6b92b46dc2738fffeedbd24e3074b1e0deca7acb02c547",
+        "MapleMonoNL-CN-BoldItalic.ttf": "f860ab46fda9e7f0ef6dc081e49338069f611ef2ce6556313c10e63fcbd891e6"
+      }
+    },
+    "nl-nf-cn": {
+      "asset_url": "https://github.com/subframe7536/maple-font/releases/download/v7.9/MapleMonoNL-NF-CN.zip",
+      "archive_sha256": "6103d3a73d0095de6b34e709f3ecaf1147e35ab7717c03068e07c0bb0a8efa2e",
+      "files": {
+        "MapleMonoNL-NF-CN-Regular.ttf": "721086d7074799bd1cefcf5ddc376102355aca6580740318c37feda3be3ed9b1",
+        "MapleMonoNL-NF-CN-Bold.ttf": "abc484a3a4b8f0c690f2e3064659fd9aab2f2d9e658f42fb15dbed8db059b002",
+        "MapleMonoNL-NF-CN-Italic.ttf": "50c768562de8cf11645e5bcccdfe28c3cebdebfcc30a26fbebe0e2d5da9f6754",
+        "MapleMonoNL-NF-CN-BoldItalic.ttf": "e722d00a4cfb2c182495e888e94b0ba19512266f78be20d6399b011a7ad7a968"
+      }
+    }
   }
 }
