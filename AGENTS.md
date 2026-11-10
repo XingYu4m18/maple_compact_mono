@@ -20,6 +20,7 @@
 - 包名、文件名、字体内部家族名等沿用上游命名，只在 `Maple` 后增加 `Compact`。
 - README 面向下载和使用字体的人：突出开发动机、效果截图、下载安装、利用脚本处理未来新版。
 - README 不放 VS Code 设置或 Commitizen 使用说明，不加入“非官方、不代表作者认可”等防御性措辞。保留必要的来源、版权、许可证和具体排版限制。
+- Windows 家族名故障的排查细节、修复约束及构建注意事项记录在本文和提交正文，不往 README 添加故障复盘或专门的修订流程说明。
 - 提交使用 Commitizen 对应的 Conventional Commits 格式，例如 `feat(build): ...`、`fix(fonts): ...`、`docs: ...`；不要求通过某个交互工具提交。
 
 ## 已发布的基线
@@ -137,6 +138,8 @@ v7.9 上游有四个预设：`MapleMono`、`MapleMonoNL`、`MapleMonoNormal`、`
 测试只允许在 GitHub Actions 的一次性 Windows runner 中显式安装字体，不会对普通开发机自动安装。不能用 Ubuntu 的 Fontconfig 枚举或 fontTools 名称记录正确，替代 Windows 的 DirectWrite 和 Chromium 实测。不要为让检查通过而放宽像素对照或用原版家族名作为补丁。
 
 故障背景：用户的 Windows 此前没有装过原版 Maple，DirectWrite 却把 Compact 文件列入 `Maple Mono NF CN`，而 Word 可见正确名称。原始 Compact 字体的名称已正确重命名；Windows 对照已证实仅补 16/17 仍会拆走 Compact，仅设置 WWS 标志即可保留它。另发现旧版展平的重叠标志位置不合法，影响直接加载 Web 字体。两项修订互相独立，都需要保留。
+
+已完成的 Windows 对照见 [2026-11-10 检查记录](https://github.com/XingYu4m18/maple_compact_mono/actions/runs/42800795652)：原版为 `Maple Mono NF CN`，仅改为 Dense 的对照保留完整新名称，仅补 name 16/17 仍去掉 Compact，仅补 WWS 即保留完整 Compact 名称。修正版全部 16 个字重／斜体通过系统 DirectWrite 文件选择检查，以及 Chromium 家族名、local 完整名称、直接加载字体三种路径的像素对照，并排除默认字体回退。这些测试不能由 Ubuntu 验证替代；每次正式发布仍须对实际 ZIP 重做 Windows 检查。
 
 未来更新上游时，还应检查许可证和组件来源是否变化，按需要更新固定清单、README 中基线版本/下载表、第三方说明和截图。现有 `THIRD_PARTY_NOTICES.md` 与 `licenses/` 是 v7.9 基线，不能默认永远适用于新版。脚本适配新版本不代表第三方许可已经自动更新。
 
