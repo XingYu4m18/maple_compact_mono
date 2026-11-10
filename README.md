@@ -75,6 +75,14 @@ fc-match 'Maple Compact Mono NF CN'
 
 首次安装后，已经运行的应用可能需要完整退出并重新打开才能识别新字体。普通版和 NF 版没有中文字库，中文显示依赖应用的备用字体；需要统一中英文外观时选择 CN 或 NF-CN。
 
+### Windows 兼容性修订
+
+`v7.9-compact.1` 基于相同的上游 v7.9，补全 WWS 家族声明，避免 DirectWrite 把 `Compact` 当作宽度描述而从家族名中移除；同时修正复合字形展平后的轮廓重叠标志，支持 Chromium 直接加载字体文件。字形轮廓、500／1000 占宽和家族名保持不变。
+
+若已安装旧版 v7.9，先卸载旧版字体，再安装修订版；曾同时做过当前用户和所有用户安装的，需要检查两处旧副本。重开应用后，统一选择 `Maple Compact Mono NF CN` 等对应家族，无需使用去掉 `Compact` 的兼容名称。
+
+修订版公开发布前，会在干净的 Windows runner 中验证实际 NF-CN 包的 DirectWrite 系统家族、全部 16 个字重／斜体的文件匹配，以及 Chromium 与直接加载字体的像素对照。检查程序和流程见 [Windows 兼容性检查](.github/workflows/windows-font-check.yml)。
+
 ### 校验下载
 
 每个 ZIP 都有同名 `.sha256` 文件，内容是该 ZIP 的 SHA-256。Linux 上可以查看并对比：
@@ -125,6 +133,15 @@ uv run --with-requirements requirements.txt python tools/build_compact.py --upst
 在自己的仓库中打开 **Actions → Build and publish fonts → Run workflow**，填写上游版本号或 `latest`。也可以推送对应的版本标签，例如 `v7.9`。
 
 工作流按包并行构建，全部验证通过且下载包、校验文件齐全后，才发布 Release。已有公开 Release 不会被自动覆盖。未来上游若增加格式、修改字宽或字体结构，脚本会提示需要适配；日常构建无需修改脚本中的版本号。
+
+同一上游版本的修订单独使用 `-compact.N` 发布标签，保持字体包文件名不变。例如 `v7.9-compact.1` 仍下载上游 v7.9：
+
+```bash
+uv run --with-requirements requirements.txt python tools/build_compact.py \
+  --upstream-version 7.9 --release-tag v7.9-compact.1 --all
+```
+
+在 Actions 手动构建时分别填写 `upstream_version` 与可选的 `release_tag`；推送 `v7.9-compact.1` 标签也会自动解析这两个版本。此后所有正式发布还必须通过 Windows 对实际上传包的检查，原有公开版本会保留。
 
 ## 排版说明
 

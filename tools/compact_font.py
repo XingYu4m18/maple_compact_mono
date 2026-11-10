@@ -26,6 +26,10 @@ def declare_wws_family(font):
     require(os2.usWidthClass == 5, 'Review changed upstream width classification')
     require(not any(n.nameID in (21, 22) for n in names.names), 'Review upstream WWS names before changing the family model')
     require(names.getBestSubFamilyName() in WWS_STYLES, 'Review non-WWS upstream subfamily')
+    if 'STAT' in font:
+        axes = font['STAT'].table.DesignAxisRecord
+        require(axes is not None and {a.AxisTag for a in axes.Axis} <= {'wght', 'wdth', 'ital', 'slnt'},
+                'Review non-WWS STAT design axes')
     os2.fsSelection |= 1 << 8
 
 

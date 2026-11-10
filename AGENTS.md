@@ -64,6 +64,8 @@
 7. 静态 TrueType 展平复合字形后处理；静态 CFF 重建轮廓；WOFF2 保持该格式。
 8. 可变 TrueType 保留字形拓扑，处理基准坐标、复合字形偏移、gvar 和 HVAR；保留 `wght` 轴与实例。不可通过导出静态字体来冒充可变包。
 9. 原 hinting 不适用于新字宽，须移除。hinted/AutoHint 静态 TrueType 包使用 `ttfautohint` 重新生成指令；unhinted 包不带旧指令。
+10. 2026-11-10 的兼容性修订：仅对已确认符合 WWS 的家族设置 `OS/2.fsSelection` bit 8，保留其他样式位，不同时添加 name ID 21/22。检查 OS/2 版本、宽度分类、子家族及 STAT 轴；出现非 WWS 属性须先适配。逐平台、编码、语言验证全部原有名称记录的重命名。
+11. 展平复合字形时，将子字形的 `OVERLAP_SIMPLE` 汇总到新简单字形的第一个点，不能把子字形起点的 bit 6 留在后续点；同时处理 `OVERLAP_COMPOUND`。保留 on/off-curve 标志，拒绝保留位。否则 DirectWrite 可能能显示，但 Chromium 的 OpenType Sanitizer 会拒绝字体。无 hinting 的 TrueType `maxZones` 设为 1。
 
 `preflight()` 会拒绝未适配的字体结构，例如当前未支持的定位、颜色、变体表以及新字宽。遇到这类错误，应检查上游变化并实现适配，不能删掉检查让构建假装成功。当前可变字体适配仅限无 CJK 的单 `wght` 轴 TrueType；CFF 仅适配上游目前提供的静态非 CID 结构。
 
@@ -123,12 +125,18 @@ v7.9 上游有四个预设：`MapleMono`、`MapleMonoNL`、`MapleMonoNormal`、`
 1. 先提交代码并推送到目标仓库。
 2. 在 GitHub Actions 的 **Build and publish fonts → Run workflow** 中指定上游版本或 `latest`；也可推送对应 `v版本号` 标签触发。
 3. `prepare` 解析清单并创建或更新草稿 Release；`build` 最多并行 16 个包，每个包构建全部字体、验证并上传 ZIP/校验文件。
-4. 全部构建成功后，`publish` 比较预期与实际附件名集合并检查大小，再公开 Release、设为 latest。
+4. 全部构建成功后，Windows 检查实际上传的候选包；通过后，`publish` 比较预期与实际附件名集合并检查大小，再公开 Release、设为 latest。
 5. 发布后实际检查 Release 是否公开、附件是否完整，抽查下载与 SHA-256、ZIP 中字体数量/名称/许可证，检查 README 下载链接。
 
 当前工作流使用仓库 `GITHUB_TOKEN`，需要 Actions 可用及 `contents: write`。原机器只有 SSH 推送认证，没有配置本地 GitHub API 写入授权；当时通过工作流完成发布。未来先检查当前授权，不要假设本地一定装了 gh 或已有令牌。
 
-工作流允许继续补齐已有草稿，拒绝覆盖已经公开的 Release。不要因重试失败就删除公开版本或强制移动已发布标签。同一上游版本若要修复并再发布，应先设计版本策略；现有解析器只接受对应上游稳定版本格式，不能随意加 `-compact.1` 后缀而不调整逻辑。
+工作流允许继续补齐已有草稿，拒绝覆盖已经公开的 Release。不要因重试失败就删除公开版本或强制移动已发布标签。现已将上游版本与项目发布版本分开：`--upstream-version 7.9 --release-tag v7.9-compact.1` 从上游 v7.9 构建本项目修订版；输出目录按发布标签分开，文件名保持上游对应规则。只允许对应上游标签本身或追加 `-compact.正整数`，不能使用修订标签查询上游 API。
+
+`.github/workflows/windows-font-check.yml` 可独立运行历史对照，也被正式发布流程复用为公开前的必需检查。`tools/windows_font_check.cpp` 在真实 Windows 上使用 DirectWrite 创建 WWS 集合，检查原版、去掉 Compact 关键词的改名对照、仅补 name 16/17、仅补 WWS 标志和最终修正版；验证最终系统安装后的 16 个字重／斜体、文件路径及字宽。`tools/check_windows_canvas.cjs` 逐个对照 Chromium 通过家族名选字体与 FontFace 直接加载文件的像素结果，并排除默认字体回退。`tools/check_windows_compatibility.py --package ...` 会校验实际候选 ZIP 及字体 SHA-256，原样安装其中字体用于检查，不会先修补候选字体。
+
+测试只允许在 GitHub Actions 的一次性 Windows runner 中显式安装字体，不会对普通开发机自动安装。不能用 Ubuntu 的 Fontconfig 枚举或 fontTools 名称记录正确，替代 Windows 的 DirectWrite 和 Chromium 实测。不要为让检查通过而放宽像素对照或用原版家族名作为补丁。
+
+故障背景：用户的 Windows 此前没有装过原版 Maple，DirectWrite 却把 Compact 文件列入 `Maple Mono NF CN`，而 Word 可见正确名称。原始 Compact 字体的名称已正确重命名；Windows 对照已证实仅补 16/17 仍会拆走 Compact，仅设置 WWS 标志即可保留它。另发现旧版展平的重叠标志位置不合法，影响直接加载 Web 字体。两项修订互相独立，都需要保留。
 
 未来更新上游时，还应检查许可证和组件来源是否变化，按需要更新固定清单、README 中基线版本/下载表、第三方说明和截图。现有 `THIRD_PARTY_NOTICES.md` 与 `licenses/` 是 v7.9 基线，不能默认永远适用于新版。脚本适配新版本不代表第三方许可已经自动更新。
 

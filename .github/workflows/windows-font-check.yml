@@ -62,5 +62,5 @@ jobs:
           name: windows-font-compatibility
           path: |
             dist/windows-check/*.json
-            dist/windows-check/fixed/*.ttf
+            dist/windows-check/fixed/
           if-no-files-found: warn

@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """Controlled Windows DirectWrite regression using immutable v7.9 binaries.
 
-Only metadata is changed: the old, already-compacted outlines and hinting are
-kept, isolating naming behavior from geometry. System installation is confined
-to the explicitly enabled disposable Windows CI runner.
+The naming ablations change metadata only. The final candidate also normalizes
+old overlap flags for the webfont sanitizer; outlines and hinting are retained.
+System installation is confined to an explicitly enabled disposable CI runner.
 """
 import argparse
 import ctypes
@@ -29,6 +29,19 @@ def download(url, path):
         shutil.copyfileobj(src, dst)
 
 
+def copy_notices(archive, target):
+    for name in archive.namelist():
+        if name not in ('OFL.txt', 'THIRD_PARTY_NOTICES.md') and not name.startswith('licenses/'):
+            continue
+        relative = Path(name)
+        require(not relative.is_absolute() and '..' not in relative.parts, 'Invalid notice path')
+        if name.endswith('/'):
+            continue
+        dest = target / relative
+        dest.parent.mkdir(parents=True, exist_ok=True)
+        dest.write_bytes(archive.read(name))
+
+
 def prepare(root):
     root.mkdir(parents=True, exist_ok=True)
     archive = root / PACKAGE
@@ -42,6 +55,7 @@ def prepare(root):
         (root / mode).mkdir(exist_ok=True)
     styles = []
     with zipfile.ZipFile(archive) as z:
+        copy_notices(z, root / 'fixed')
         for entry in z.namelist():
             if not entry.endswith('.ttf'):
                 continue
@@ -106,6 +120,7 @@ def prepare_candidate(root, archive):
     require(hashlib.sha256(archive.read_bytes()).hexdigest() == expected, 'Candidate package checksum mismatch')
     styles = []
     with zipfile.ZipFile(archive) as z:
+        copy_notices(z, fixed)
         manifest = json.loads(z.read('compact-build.json'))
         require(manifest['font_count'] == 16, 'Candidate package is incomplete')
         for entry in manifest['fonts']:

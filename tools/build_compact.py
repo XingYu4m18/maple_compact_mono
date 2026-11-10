@@ -155,7 +155,7 @@ def release_notes(catalog, repo='XingYu4m18/maple_compact_mono'):
     lines = [f'# Maple Compact Mono {tag}', '',
              f'基于 [Maple Mono {catalog["tag"]}]({catalog["source"]})，英文宽度由 600 收至 500，中文占位由 1200 收至 1000，中文字形大小保持不变。', '',
              '覆盖上游全部字重、Ligature / NL / Normal / NormalNL，以及 TTF、OTF、WOFF2、Variable、NF、CN、NF-CN 各下载包。hinted 包重新生成 hinting，可变字体保留字重轴。', '',
-             '本修订声明 WWS 字体家族，修复 Windows DirectWrite 将 Compact 误作样式描述而从家族名中移除的问题。中文占位、字形和字体家族命名规则保持不变。发布前使用 Windows DirectWrite 与 Chromium 检查实际 NF-CN 包的全部 16 个字重／斜体。', '',
+             '本修订声明 WWS 字体家族，修复 Windows DirectWrite 将 Compact 误作样式描述而从家族名中移除的问题；同时修正展平字形的重叠标志位置，使字体可通过 Chromium 的 OpenType 检查。中文占位、字形轮廓和字体家族命名规则保持不变。发布前使用 Windows DirectWrite 与 Chromium 检查实际 NF-CN 包的全部 16 个字重／斜体。', '',
              '## 下载', '', '| 上游分类 | Compact 下载 | 校验 |', '| :--- | :--- | :--- |']
     for p in catalog['packages']:
         base = f'https://github.com/{repo}/releases/download/{tag}/'
